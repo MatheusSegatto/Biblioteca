@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct
 {
     char *nome;
     char *matricula;
     int livro;
+    struct alunos *prox;
 } alunos;
 
 typedef struct
@@ -27,19 +29,38 @@ typedef struct
 
 
 
-void cadastro_aluno(/*int *n, alunos **aluno*/){
-    //*n = *n + 1;
-    //alunos *aluno = (alunos*)realloc(*aluno, (*n * sizeof(alunos)))
+void cadastro_aluno(alunos *cab){
+    char matricula[20];
+    char nome[50];
+    //Perguntar matrícula, caso exista, dizer que já existe e voltar ao menu
+    printf("Qual a matrícula do aluno?\n");
+    scanf("%s", matricula);
+    alunos *ant = NULL;
+    alunos *p = pesquisa_aluno(1, matricula, cab, &ant);
+    if (p != NULL)
+    {
+        printf("Aluno já cadastrado!\n");
+        return;
+    }
+    p = (alunos *)malloc(sizeof(alunos));
+    printf("Qual o nome do aluno?\n");
+    scanf(" %[^\n]", nome);
+    strcpy(p->nome, nome);
+    strcpy(p->matricula, matricula);
+    p->prox = cab->prox;
+    cab->prox = p;
+    printf("Aluno cadastrado com sucesso!\n");
+
 
 } 
+alunos * pesquisa_aluno(int sw, char *procurado,alunos *cab, alunos **ant){
+
+}
 void cadastro_livro(){
 
 }
 
 void cadastro_recurso(){
-
-}
-void pesquisa(){
 
 }
 
@@ -71,6 +92,8 @@ void menu(){
 }
 int main(int argc, char const *argv[])
 {
+    alunos *cab = (alunos *)malloc(sizeof(alunos));
+    cab->prox = NULL;
     int n_alunos = 0;
     alunos *aluno;
     cadastro_aluno(&n_alunos, &aluno);
