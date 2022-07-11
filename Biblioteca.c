@@ -95,29 +95,29 @@ int main(int argc, char const *argv[])
     //Alocando vetor de alunos
     alunos **vetalunos = (alunos **)(malloc(sizeof(alunos *)));
     vetalunos[0] = (alunos *)malloc(sizeof(alunos));
-    int a = 1, matriculados = 0;
+    int matriculados = 0;
+    vetalunos = realloc(vetalunos, sizeof(35 * sizeof(alunos *)));
     for (size_t i = 1; i < 35; i++)
     {
-        a++; //TODO a já fica 2 antes do primeiro realloc
-        vetalunos = realloc(vetalunos, sizeof((a) * sizeof(alunos *)));
+        //a++;
+        //vetalunos = realloc(vetalunos, sizeof((a) * sizeof(alunos *)));
         vetalunos[i] = (alunos *)(malloc(sizeof(alunos)));
     }
     //Alocando vetor de livros
     livros **vetlivros = (livros **)(malloc(sizeof(livros *)));
     vetlivros[0] = (livros *)malloc(sizeof(livros));
-    int cadastrados = 0;
-    a = 1;
+    vetlivros = realloc(vetlivros, sizeof(50 * sizeof(livros *)));
     for (size_t i = 1; i < 50; i++)
     {
-        a++;
-        vetlivros = realloc(vetlivros, sizeof((a) * sizeof(livros *)));
+        //a++;
+        //vetlivros = realloc(vetlivros, sizeof((a) * sizeof(livros *)));
         vetlivros[i] = (livros *)malloc(sizeof(livros));
     }
     
 
-    vetalunos[3]->teste = 56;
+    //vetalunos[3]->teste = 56;
 
-
+    int cadastrados = 0;
     int escolha;
     while (escolha != 5)
     {
