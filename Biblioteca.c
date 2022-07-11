@@ -7,7 +7,7 @@ typedef struct
     char nome[50];
     char *matricula;
     int livro;
-    struct alunos *prox;
+    int teste;
 } alunos;
 
 typedef struct
@@ -92,15 +92,32 @@ void cadastro_recurso(){
 // }
 int main(int argc, char const *argv[])
 {
-    alunos **vet = (alunos **)(malloc(sizeof(sizeof *)));
-    vet[0] = (alunos *)malloc(sizeof(alunos));
-    int a = 1;
+    //Alocando vetor de alunos
+    alunos **vetalunos = (alunos **)(malloc(sizeof(alunos *)));
+    vetalunos[0] = (alunos *)malloc(sizeof(alunos));
+    int a = 1, matriculados = 0;
     for (size_t i = 1; i < 35; i++)
     {
         a++; //TODO a já fica 2 antes do primeiro realloc
-        vet = realloc(vet, sizeof(a * sizeof(alunos *)));
-        vet[i] = (alunos *)(malloc(sizeof(alunos)));
+        vetalunos = realloc(vetalunos, sizeof((a) * sizeof(alunos *)));
+        vetalunos[i] = (alunos *)(malloc(sizeof(alunos)));
     }
+    //Alocando vetor de livros
+    livros **vetlivros = (livros **)(malloc(sizeof(livros *)));
+    vetlivros[0] = (livros *)malloc(sizeof(livros));
+    int cadastrados = 0;
+    a = 1;
+    for (size_t i = 1; i < 50; i++)
+    {
+        a++;
+        vetlivros = realloc(vetlivros, sizeof((a) * sizeof(livros *)));
+        vetlivros[i] = (livros *)malloc(sizeof(livros));
+    }
+    
+
+    vetalunos[3]->teste = 56;
+
+
     int escolha;
     while (escolha != 5)
     {
@@ -108,21 +125,27 @@ int main(int argc, char const *argv[])
         scanf("%d", &escolha);
         if (escolha == 1)
         {
-            cadastro_aluno();
+            matriculados +=1;
+            if (matriculados > 35)
+            {
+                //Aumentar vetor de alunos
+            }
+            //cadastro_aluno();
         }
         else if (escolha == 2)
         {
-            cadastro_livro();
+            //cadastro_livro();
         }
         else if (escolha == 3)
         {
-            cadastro_recurso();
+            //cadastro_recurso();
         }
         else if (escolha == 4)
         {
-            pesquisa();
+            //pesquisa();
         }
     }
+    printf("%d\n", vetalunos[3]->teste);
     
     return 0;
 }
