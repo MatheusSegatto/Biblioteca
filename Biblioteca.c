@@ -96,7 +96,7 @@ int main(int argc, char const *argv[])
     cab->prox = NULL;
     int n_alunos = 0;
     alunos *aluno;
-    cadastro_aluno(&n_alunos, &aluno);
+    //cadastro_aluno(&n_alunos, &aluno);
     printf("n_alunos: %d\n", n_alunos);
     menu();
     return 0;
