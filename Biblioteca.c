@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 typedef struct
 {
@@ -93,6 +94,10 @@ void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixa
 
     printf("Qual categoria do livro?\n");
     scanf(" %[^\n]", tmp);
+    for (int i = 0; tmp[i]; i++)
+        {
+            tmp[i] = tolower(tmp[i]);
+        }
     strcpy(vet[*cadastrados]->categoria, tmp);
 
     printf("Qual o ano de publicação?\n");
@@ -117,6 +122,41 @@ void lista_livro(livros **vet, int cadastrados){
         if (vet[i] != NULL)
         {
             printf("ID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", i, vet[i]->nome, vet[i]->categoria, vet[i]->ano);
+        }
+    }
+    
+}
+void busca_livro(livros **vet, int cadastrados){
+    int escolha, id;
+    char tmp[20];
+    printf("1- Buscar por ID\n2- Buscar por categoria\n");
+    scanf("%d", &escolha);
+    if (escolha == 1)   
+    {
+        printf("Qual o ID procurado?\n");
+        scanf("%d", &id);
+        if (id > (cadastrados - 1))
+        {
+            printf("Livro não está no sistema!\n");
+        }
+        else{
+            printf("Livro encontrado!\nID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", id, vet[id]->nome, vet[id]->categoria, vet[id]->ano);
+        }
+    }
+    else if(escolha == 2)
+    {
+        printf("Escreva a categoria desejada:\n");
+        scanf(" %[^\n]", tmp);
+        for (int i = 0; tmp[i]; i++)
+        {
+            tmp[i] = tolower(tmp[i]);
+        }
+        for (int i = 0; i < cadastrados; i++)
+        {
+            if (strcmp(tmp, vet[i]->categoria) == 0)
+            {
+                printf("NOME: %s\nID: %d\n", vet[i]->nome, i);
+            }   
         }
     }
     
@@ -228,7 +268,7 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 4)
                 {
-                    //busca_livro();
+                    busca_livro(vetlivros, sistema_livros);
                 }
                 else if (escolha == 5)
                 {
