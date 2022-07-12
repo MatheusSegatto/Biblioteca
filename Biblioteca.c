@@ -7,7 +7,7 @@ typedef struct
     char nome[50];
     char matricula[12]; //Matrícula do cefet tem 11 caracteres ex: 2112227GCOM
     int livro;
-    int teste;
+    //int teste;
 } alunos;
 
 typedef struct
@@ -55,14 +55,17 @@ typedef struct
 // } 
 void cadastro_aluno(alunos *p){
     char nome[50];
+
     printf("Qual o nome do aluno?\n");
-    scanf('')
+    scanf(" %[^\n]", nome);
+    strcpy(p->nome, nome);
+    return;
 }
 
 
-alunos * pesquisa_aluno(int sw, char *procurado,alunos *cab, alunos **ant){
+//? alunos * pesquisa_aluno(int sw, char *procurado,alunos *cab, alunos **ant){}
 
-}
+
 void cadastro_livro(){
 
 }
@@ -149,17 +152,23 @@ int main(int argc, char const *argv[])
             printf("Qual a matrícula do aluno?\n");
             char matricula[12];//Matrícula do cefet tem 11 caracteres ex: 2112227GCOM
             scanf("%s", matricula);
-            for (size_t i = 0; i < cadastrados; i++)
+            int status = 0;
+            //Verficando se aluno já está matriculado
+            for (int i = 0; i < cadastrados; i++)
             {
+                //TODO Como faria pra entrar na função sem modificar quantidade de cadastrados
                 if (strcmp(matricula, vetalunos[i]->matricula) == 0)
                 {
                     printf("Aluno já cadastrado! ID: %d\n", i);
+                    status = 1;
+                    break;
                 }
-                else{
-                    strcpy(vetalunos[cadastrados]->matricula, matricula);
-                    cadastro_aluno(vetalunos[cadastrados]);
-                    cadastrados += 1;
-                }
+            }
+            if(status == 0)
+            {
+            strcpy(vetalunos[cadastrados]->matricula, matricula);
+            cadastro_aluno(vetalunos[cadastrados]);
+            cadastrados += 1;
             }
         }
         else if (escolha == 2)
@@ -175,7 +184,7 @@ int main(int argc, char const *argv[])
             //pesquisa();
         }
     }
-    printf("%d\n", vetalunos[3]->teste);
+    printf("%s\n", vetalunos[2]->nome);
     
     return 0;
 }
