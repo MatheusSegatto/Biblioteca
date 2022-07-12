@@ -5,7 +5,7 @@
 typedef struct
 {
     char nome[50];
-    char *matricula;
+    char matricula[12]; //Matrícula do cefet tem 11 caracteres ex: 2112227GCOM
     int livro;
     int teste;
 } alunos;
@@ -53,6 +53,13 @@ typedef struct
 
 
 // } 
+void cadastro_aluno(alunos *p){
+    char nome[50];
+    printf("Qual o nome do aluno?\n");
+    scanf('')
+}
+
+
 alunos * pesquisa_aluno(int sw, char *procurado,alunos *cab, alunos **ant){
 
 }
@@ -95,6 +102,12 @@ int main(int argc, char const *argv[])
     //Alocando vetor de alunos
     alunos **vetalunos = (alunos **)(malloc(sizeof(alunos *)));
     vetalunos[0] = (alunos *)malloc(sizeof(alunos));
+    //vetalunos[i]->nome;
+    //chamada -> rm_aluno(v[i])
+    //rm_aluno(struct aluno *p)
+    //p->nome = "novonome";
+    ///p = NULL -> mesma coisa que p = malloc(0*sizeof(alunos));
+
     int matriculados = 0;
     vetalunos = realloc(vetalunos, sizeof(35 * sizeof(alunos *)));
     for (size_t i = 1; i < 35; i++)
@@ -117,7 +130,7 @@ int main(int argc, char const *argv[])
 
     //vetalunos[3]->teste = 56;
 
-    int cadastrados = 0;
+    int cadastrados = 0, turmas = 1;
     int escolha;
     while (escolha != 5)
     {
@@ -129,8 +142,25 @@ int main(int argc, char const *argv[])
             if (matriculados > 35)
             {
                 //Aumentar vetor de alunos
+                turmas += 1;
+                vetalunos = realloc(vetalunos, sizeof((35 * turmas) * sizeof(alunos *)));
             }
-            //cadastro_aluno();
+            //Perguntar matrícula antes de entrar na função
+            printf("Qual a matrícula do aluno?\n");
+            char matricula[12];//Matrícula do cefet tem 11 caracteres ex: 2112227GCOM
+            scanf("%s", matricula);
+            for (size_t i = 0; i < cadastrados; i++)
+            {
+                if (strcmp(matricula, vetalunos[i]->matricula) == 0)
+                {
+                    printf("Aluno já cadastrado! ID: %d\n", i);
+                }
+                else{
+                    strcpy(vetalunos[cadastrados]->matricula, matricula);
+                    cadastro_aluno(vetalunos[cadastrados]);
+                    cadastrados += 1;
+                }
+            }
         }
         else if (escolha == 2)
         {
