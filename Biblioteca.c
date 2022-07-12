@@ -14,7 +14,7 @@ typedef struct
 {
     char nome[50];
     int ano; //Para fins de otimização de memória, pode ser uma boa idéia colocar um tipo menor
-    char *categoria;
+    char categoria[20];
     int status; // Disponivel = 1 | Emprestado = 0
 
 } livros;
@@ -47,7 +47,7 @@ void remove_aluno(alunos **vet){
     vet[id] = NULL;
 }
 
-void lista(alunos **vet, int quantidade){
+void lista_aluno(alunos **vet, int quantidade){
     for (int i = 0; i < quantidade; i++)
     {
         if (vet[i] != NULL)
@@ -57,44 +57,54 @@ void lista(alunos **vet, int quantidade){
     }
     
 }
+void busca_aluno(alunos **vet, int cadastrados){
+    printf("Qual ID do aluno procurado?\n");
+    int id;
+    scanf("%d", &id);
+    if (id > (cadastrados - 1))
+    {
+        printf("Aluno não existe no sistema");
+    }
+    else
+    {
+        printf("Aluno encontrado!\nNOME: %s\nMATRICULA: %s\n", vet[id]->nome, vet[id]->matricula);
+    }
+}
 
-//? alunos * pesquisa_aluno(int sw, char *procurado,alunos *cab, alunos **ant){}
+// alunos * pesquisa_aluno(int sw, char *procurado,alunos *cab, alunos **ant){}
 
 
-void cadastro_livro(){
+int cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixas){
+    //Para alterar, usar *caixas
+    if (*cadastrados > (*caixas * 50))
+    {
+        *caixas += 1;
+        tabela = realloc(tabela, (50 * (*caixas)) * sizeof(livros *)); //
+        for (size_t i = (50 * ((*caixas) - 1)); i < (50 * (*caixas)); i++)
+        {
+            *tabela[i] = (livros *)malloc(sizeof(livros)); //É *tabela msm? Quando coloquei só "tabela" recebi um warning do gcc
+        }
+    }
+    char tmp[20];
+    int ano;
+    printf("Qual o nome do livro?\n");
+    scanf(" %[^\n]", tmp);
+    strcpy(vet[*cadastrados]->nome, tmp);
 
+    printf("Qual categoria do livro?\n");
+    scanf(" %[^\n]", tmp);
+    strcpy(vet[*cadastrados]->categoria, tmp);
+
+    printf("Qual o ano de publicação?\n");
+    scanf("%d", &ano);
+
+    *cadastrados += 1;
 }
 
 void cadastro_recurso(){
 
 }
 
-// void menu(){
-//     int escolha;
-//     while (escolha != 5)
-//     {
-//         printf("MENU:\n1- Cadastrar aluno\n2- Cadastrar livro\n3- Cadastrar recurso\n4- Pesquisa\n5- Sair\n");
-//         scanf("%d", &escolha);
-//         if (escolha == 1)
-//         {
-//             cadastro_aluno();
-//         }
-//         else if (escolha == 2)
-//         {
-//             cadastro_livro();
-//         }
-//         else if (escolha == 3)
-//         {
-//             cadastro_recurso();
-//         }
-//         else if (escolha == 4)
-//         {
-//             pesquisa();
-//         }
-        
-        
-//     }
-// }
 int main(int argc, char const *argv[])
 {
     //Alocando vetor de alunos
@@ -114,49 +124,31 @@ int main(int argc, char const *argv[])
 
     //Alocando vetor de livros
     livros **vetlivros = (livros **)(malloc(sizeof(livros *)));
-    vetlivros[0] = (livros *)malloc(sizeof(livros));
+    //vetlivros[0] = (livros *)malloc(sizeof(livros));
     vetlivros = realloc(vetlivros, 50 * sizeof(livros *));
-    for (size_t i = 1; i < 50; i++)
+    for (size_t i = 0; i < 50; i++)
     {
-        //a++;
-        //vetlivros = realloc(vetlivros, sizeof((a) * sizeof(livros *)));
         vetlivros[i] = (livros *)malloc(sizeof(livros));
     }
-    
-
     //vetalunos[3]->teste = 56;
-
-    int cadastrados = 0, turmas = 1;
-    int escolha = 1;
+    int turmas = 1, escolha = 1, caixas = 1, sistema_livros = 0;
     while (escolha != 0) //Menu Principal
     {
         printf("MENU:\n1- Seção aluno\n2- Seção livro\n3- Seção recurso\n0- Sair\n");
         scanf("%d", &escolha);
         if (escolha == 1)
         {
-            while(escolha != 5){ //Menu Aluno
-                printf("MENU:\n1- Cadastrar aluno\n2- Remover aluno\n3- Listar alunos\n4- Pesquisar aluno\n5- Sair\n");
+            while(escolha != 0){ //Menu Aluno
+                printf("MENU:\n1- Cadastrar aluno\n2- Remover aluno\n3- Listar alunos\n4- Pesquisar aluno\n0- Sair\n");
                 scanf("%d", &escolha);
                 if(escolha == 1){
-                    matriculados +=1;
-                    if (matriculados > (35 * turmas))
-                    {
-                        //Aumentar vetor de alunos
-                        turmas += 1;
-                        vetalunos = realloc(vetalunos, (35 * turmas) * sizeof(alunos *));
-                        for (size_t i = (35 * (turmas - 1)); i < (35 * turmas); i++)
-                        {
-                            vetalunos[i] = (alunos *)malloc(sizeof(alunos));
-                        }
-                        
-                    }
                     //Perguntar matrícula antes de entrar na função
                     printf("Qual a matrícula do aluno?\n");
                     char matricula[12];//Matrícula do cefet tem 11 caracteres ex: 2112227GCOM
                     scanf("%s", matricula);
                     int status = 0;
                     //Verficando se aluno já está matriculado
-                    for (int i = 0; i < cadastrados; i++)
+                    for (int i = 0; i < matriculados; i++)
                     {
                         //TODO Como faria pra entrar na função sem modificar quantidade de cadastrados
                         if (strcmp(matricula, vetalunos[i]->matricula) == 0)
@@ -168,27 +160,65 @@ int main(int argc, char const *argv[])
                     }
                     if(status == 0)
                     {
-                    strcpy(vetalunos[cadastrados]->matricula, matricula);
-                    cadastro_aluno(vetalunos[cadastrados]);
-                    cadastrados += 1;
+                    matriculados += 1;
+                    if (matriculados > (35 * turmas))
+                    {
+                        //Aumentar vetor de alunos
+                        turmas += 1;
+                        vetalunos = realloc(vetalunos, (35 * turmas) * sizeof(alunos *));
+                        for (size_t i = (35 * (turmas - 1)); i < (35 * turmas); i++)
+                        {
+                            vetalunos[i] = (alunos *)malloc(sizeof(alunos));
+                        }
+                        
+                    }
+                    strcpy(vetalunos[matriculados]->matricula, matricula);
+                    cadastro_aluno(vetalunos[matriculados]);
                     }
                 }
-                if (escolha == 2)
+                else if (escolha == 2)
                 {
                     remove_aluno(vetalunos);
                 }
-                if (escolha == 3)
+                else if (escolha == 3)
                 {
-                    lista(vetalunos, cadastrados);
+                    lista_aluno(vetalunos, matriculados);
                 }
-                
-                
-
+                else if (escolha == 4)
+                {
+                    busca_aluno(vetalunos, matriculados);
+                }
             }
+            escolha = 1;
         }
         else if (escolha == 2)
         {
-            //cadastro_livro();
+            while (escolha != 0)
+            {
+                printf("1- Cadastrar livro\n2- Remover livro\n3- Listar livros\n4- Buscar livro\n5- Emprestar livro\n0- Sair\n");
+                scanf("%d", &escolha);
+                if (escolha == 1)
+                {
+                    cadastro_livro(&vetlivros, vetlivros, &sistema_livros, &caixas);
+                }
+                else if (escolha == 2)
+                {
+                    //remove_livro();
+                }
+                else if (escolha == 3)
+                {
+                    //lista_livro();
+                }
+                else if (escolha == 4)
+                {
+                    //busca_livro();
+                }
+                else if (escolha == 5)
+                {
+                    //empresta_livro();
+                }
+            }
+            escolha = 1;
         }
         else if (escolha == 3)
         {
@@ -199,7 +229,7 @@ int main(int argc, char const *argv[])
             //pesquisa();
         }
     }
-    //printf("%s\n", vetalunos[0]->nome);
+    printf("%s\n", vetlivros[0]->nome);
     
     return 0;
 }
