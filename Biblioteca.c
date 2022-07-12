@@ -74,7 +74,7 @@ void busca_aluno(alunos **vet, int cadastrados){
 // alunos * pesquisa_aluno(int sw, char *procurado,alunos *cab, alunos **ant){}
 
 
-int cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixas){
+void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixas){
     //Para alterar, usar *caixas
     if (*cadastrados > (*caixas * 50))
     {
@@ -98,11 +98,28 @@ int cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixas
     printf("Qual o ano de publicação?\n");
     scanf("%d", &ano);
 
+    vet[*cadastrados]->ano = ano;
+
     *cadastrados += 1;
 }
 
-void cadastro_recurso(){
+void remove_livro(livros **vet){
+    int id;
+    printf("Digite o ID do livro que deseja remover\n");
+    scanf("%d", &id);
+    free(vet[id]);
+    vet[id] = NULL;
+}
 
+void lista_livro(livros **vet, int cadastrados){
+    for (int i = 0; i < cadastrados; i++)
+    {
+        if (vet[i] != NULL)
+        {
+            printf("ID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", i, vet[i]->nome, vet[i]->categoria, vet[i]->ano);
+        }
+    }
+    
 }
 
 int main(int argc, char const *argv[])
@@ -203,11 +220,11 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 2)
                 {
-                    //remove_livro();
+                    remove_livro(vetlivros);
                 }
                 else if (escolha == 3)
                 {
-                    //lista_livro();
+                    lista_livro(vetlivros, sistema_livros);
                 }
                 else if (escolha == 4)
                 {
@@ -229,7 +246,7 @@ int main(int argc, char const *argv[])
             //pesquisa();
         }
     }
-    printf("%s\n", vetlivros[0]->nome);
+    //printf("%s\n", vetlivros[0]->nome);
     
     return 0;
 }
