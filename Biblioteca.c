@@ -70,13 +70,13 @@ void busca_aluno(alunos **vet, int cadastrados){
     printf("Qual ID do aluno procurado?\n");
     int id;
     scanf("%d", &id);
-    if (id > (cadastrados - 1))
+    if (id < (cadastrados) && vet[id] != NULL)
     {
-        printf("Aluno não existe no sistema");
+        printf("Aluno encontrado!\nNOME: %s\nMATRICULA: %s\n", vet[id]->nome, vet[id]->matricula);
     }
     else
     {
-        printf("Aluno encontrado!\nNOME: %s\nMATRICULA: %s\n", vet[id]->nome, vet[id]->matricula);
+        printf("Aluno não existe no sistema");
     }
 }
 
@@ -88,7 +88,7 @@ void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixa
     if (*cadastrados > (*caixas * 50))
     {
         *caixas += 1;
-        tabela = realloc(tabela, (50 * (*caixas)) * sizeof(livros *)); //
+        *tabela = realloc(*tabela, (50 * (*caixas)) * sizeof(livros *)); //
         for (size_t i = (50 * ((*caixas) - 1)); i < (50 * (*caixas)); i++)
         {
             *tabela[i] = (livros *)malloc(sizeof(livros)); //É *tabela msm? Quando coloquei só "tabela" recebi um warning do gcc
@@ -118,19 +118,23 @@ void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixa
     *cadastrados += 1;
 }
 
-void remove_livro(livros **vet){
+void remove_livro(livros **vet, int cadastrados){
     int id;
     printf("Digite o ID do livro que deseja remover\n");
     scanf("%d", &id);
-    if (vet[id]->status == 0)
-    {
-        printf("Livro está emprestado para algum aluno! Operação cancelada!\n");
+    if(id < cadastrados && vet[id] != NULL){
+        if (vet[id]->status == 0)
+        {
+            printf("Livro está emprestado para o aluno de ID: %d! Operação cancelada!\n", vet[id]->aluno);
+        }
+        else{
+            free(vet[id]);
+            vet[id] = NULL;
+        }
     }
     else{
-        free(vet[id]);
-        vet[id] = NULL;
+        printf("Livro não está no sistema, verifique o ID! Operação cancelada");
     }
-    
 }
 
 void lista_livro(livros **vet, int cadastrados, alunos **pessoas){
@@ -344,7 +348,7 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 2)
                 {
-                    remove_livro(vetlivros);
+                    remove_livro(vetlivros, sistema_livros);
                 }
                 else if (escolha == 3)
                 {
