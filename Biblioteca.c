@@ -287,8 +287,8 @@ int main(int argc, char const *argv[])
                     }
                     if(status == 0)
                     {
-                    matriculados += 1;
-                    if (matriculados > (35 * turmas))
+                    
+                    if ((matriculados + 1) > (35 * turmas))
                     {
                         //Aumentar vetor de alunos
                         turmas += 1;
@@ -301,6 +301,7 @@ int main(int argc, char const *argv[])
                     }
                     strcpy(vetalunos[matriculados]->matricula, matricula);
                     cadastro_aluno(vetalunos[matriculados]);
+                    matriculados += 1;
                     }
                 }
                 else if (escolha == 2)
