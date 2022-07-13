@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
+//TODO Mostrar matrícula do aluno que pegou livro emprestado na listagem de livros
 typedef struct
 {
     char nome[50];
@@ -36,7 +37,7 @@ void cadastro_aluno(alunos *p){
     scanf(" %[^\n]", nome);
     strcpy(p->nome, nome);
     //printf("%s", p->nome);
-    //p->livro = -1;
+    p->livro = -1;
     return;
 }
 
@@ -45,9 +46,14 @@ void remove_aluno(alunos **vet){
     printf("Digite o ID do aluno que quer remover\n");
     scanf("%d", &id);
     //TODO Verificar se possui algo emprestado
-    //printf("%p\n", vet[id]);
-    free(vet[id]);
-    vet[id] = NULL;
+    if (vet[id]->livro == -1)
+    {
+        free(vet[id]);
+        vet[id] = NULL;
+    }
+    else{
+        printf("O aluno possui algum livro emprestado! Operação canceldada!\n");
+    }
 }
 
 void lista_aluno(alunos **vet, int quantidade){
@@ -116,11 +122,18 @@ void remove_livro(livros **vet){
     int id;
     printf("Digite o ID do livro que deseja remover\n");
     scanf("%d", &id);
-    free(vet[id]);
-    vet[id] = NULL;
+    if (vet[id]->status == 0)
+    {
+        printf("Livro está emprestado para algum aluno! Operação cancelada!\n");
+    }
+    else{
+        free(vet[id]);
+        vet[id] = NULL;
+    }
+    
 }
 
-void lista_livro(livros **vet, int cadastrados){
+void lista_livro(livros **vet, int cadastrados, alunos **pessoas){
     for (int i = 0; i < cadastrados; i++)
     {
         if (vet[i] != NULL)
@@ -128,7 +141,7 @@ void lista_livro(livros **vet, int cadastrados){
             printf("ID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", i, vet[i]->nome, vet[i]->categoria, vet[i]->ano);
             if (vet[i]->status == 0)
             {
-                printf("STATUS: Emprestado para o aluno de ID: %d\n", vet[i]->aluno);
+                printf("STATUS: Emprestado para o aluno de matrícula: %s\n", pessoas[vet[i]->aluno]->matricula);
             }
             else{
                 printf("STATUS: Disponível\n");
@@ -195,11 +208,11 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
     {
         printf("Qual ID do livro que será emprestado?\n");
         scanf("%d", &id);
-        if (id < (cadastrados - 1) && vet[id] != NULL)//Talvez de problema verificar se é NULL se a posição for inválida
+        if (id < (cadastrados) && vet[id] != NULL)
         {
             printf("Qual ID do aluno que ficará com o livro?\n");
             scanf("%d", &aluno);
-            if (aluno < (totalalunos - 1) && pessoas[id] != NULL)
+            if (aluno < (totalalunos) && pessoas[id] != NULL)
             {
                 pessoas[aluno]->livro = id;
                 vet[id]->aluno = aluno;
@@ -217,14 +230,14 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
     {
         printf("Qual ID do livro que será devolvido?\n");
         scanf("%d", &id);
-        if (id > (cadastrados - 1) || vet[id] == NULL)
+        if (id < (cadastrados) && vet[id] != NULL && vet[id]->aluno != -1)
         {
-            printf("Livro não está no sistema, verifique ID!\n");
-        }
-        else{
             vet[id]->status = 1;
             pessoas[vet[id]->aluno]->livro = -1;
             vet[id]->aluno = -1;
+        }
+        else{
+            printf("Livro não está no sistema, verifique ID!\n");
         }
     }
     
@@ -278,7 +291,7 @@ int main(int argc, char const *argv[])
                     for (int i = 0; i < matriculados; i++)
                     {
                         //TODO Como faria pra entrar na função sem modificar quantidade de cadastrados
-                        if (strcmp(matricula, vetalunos[i]->matricula) == 0)
+                        if (vetalunos[i] != NULL && strcmp(matricula, vetalunos[i]->matricula) == 0)
                         {
                             printf("Aluno já cadastrado! ID: %d\n", i);
                             status = 1;
@@ -335,7 +348,7 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 3)
                 {
-                    lista_livro(vetlivros, sistema_livros);
+                    lista_livro(vetlivros, sistema_livros, vetalunos);
                 }
                 else if (escolha == 4)
                 {
