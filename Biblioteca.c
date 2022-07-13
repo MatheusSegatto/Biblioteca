@@ -24,9 +24,10 @@ typedef struct
 typedef struct
 {
     int ID; // Nesse caso, como é inserido manualmente, tenho que deixar na struct
-    int status; //Talvez possa usar char, pois não precisa ser muito grande
+    int status; //Livre = 1 | Emprestado = 0
     int aluno;
-
+    char tipo[15]; //sala, computador ou armário
+    struct recurso *prox;
 } recurso;
 
 
@@ -88,7 +89,7 @@ void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixa
     if (*cadastrados > (*caixas * 50))
     {
         *caixas += 1;
-        *tabela = realloc(*tabela, (50 * (*caixas)) * sizeof(livros *)); //
+        *tabela = realloc(*tabela, (50 * (*caixas)) * sizeof(livros *));
         for (size_t i = (50 * ((*caixas) - 1)); i < (50 * (*caixas)); i++)
         {
             *tabela[i] = (livros *)malloc(sizeof(livros)); //É *tabela msm? Quando coloquei só "tabela" recebi um warning do gcc
@@ -244,14 +245,76 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
             printf("Livro não está no sistema, verifique ID!\n");
         }
     }
+}
+
+void cadastro_recurso(recurso *cab){
+    recurso *ant = NULL;
+    int id;
+    printf("Insira o ID do recurso\n");
+    scanf("%d", &id);
+    recurso *p = busca_recurso(cab, id, &ant);
+    if (p != NULL)
+    {
+        printf("Recurso já cadastrado! Operação cancelada.\n");
+        return;
+    }
+    //Inserção do recurso
+    p = (recurso *)malloc(sizeof(recurso));
+    p->ID = id;
+    int escolha;
+    printf("TIPO:\n1- Sala\n2- Computador\n3- Armário\n");
+    scanf("%d", &escolha);
+    if (escolha == 1)
+    {
+        strcpy(p->tipo, "Sala");
+    }
+    else if (escolha == 2)
+    {
+        strcpy(p->tipo, "Computador");
+    }
+    else if (escolha == 3)
+    {
+        strcpy(p->tipo, "Armário");
+    }
+    printf("RECURSO CADASTRADO!\n");
+    p->prox = cab->prox;
+    cab->prox = p;
+}
+
+void remove_recurso(recurso *cab){
+    recurso *ant = NULL;
+    recurso *p;
+    int id;
+
+    printf("Qual ID do recurso que será removido?\n");
+    scanf("%d", &id);
+    p = busca_recurso(cab, id, &ant);
+    if (p != NULL)
+    {
+        ant->prox = p->prox;
+        free(p);
+        printf("Recurso removido com sucesso!\n");
+    }
+    else{
+        printf("Elemento não está na lista! Verifique o ID.\n");
+    }
     
-    
+}
+
+recurso * busca_recurso(recurso *cab, int id, recurso **ant){
+    (*ant) = cab;
+    recurso *p = cab->prox;
+    while (p != NULL && p->ID != id)
+    {
+        (*ant) = p;
+        p = p->prox;
+    }
+    return p;
 }
 
 int main(int argc, char const *argv[])
 {
     //Alocando vetor de alunos
-    alunos **vetalunos = (alunos **)malloc(sizeof(alunos *));
     //vetalunos[0] = (alunos *)malloc(sizeof(alunos));
     //vetalunos[i]->nome;
     //chamada -> rm_aluno(v[i])
@@ -260,6 +323,7 @@ int main(int argc, char const *argv[])
     ///p = NULL -> mesma coisa que p = malloc(0*sizeof(alunos));
 
     int matriculados = 0;
+    alunos **vetalunos = (alunos **)malloc(sizeof(alunos *));
     vetalunos = realloc(vetalunos, 35 * sizeof(alunos *));
     for (size_t i = 0; i < 35; i++)
     {
@@ -274,6 +338,11 @@ int main(int argc, char const *argv[])
     {
         vetlivros[i] = (livros *)malloc(sizeof(livros));
     }
+
+    recurso *cab = (recurso *)malloc(sizeof(recurso));
+    cab->prox = NULL;
+
+
     //vetalunos[3]->teste = 56;
     int turmas = 1, escolha = 1, caixas = 1, sistema_livros = 0;
     while (escolha != 0) //Menu Principal
@@ -367,11 +436,32 @@ int main(int argc, char const *argv[])
         }
         else if (escolha == 3)
         {
-            //cadastro_recurso();
-        }
-        else if (escolha == 4)
-        {
-            //pesquisa();
+            while (escolha != 0)
+            {
+                printf("1- Cadastrar recurso\n2- Remover recurso\n3- Listar recurso\n4- Buscar recurso\n5- Ocupar recurso\n0- Sair\n");
+                if (escolha == 1)
+                {
+                    cadastro_recurso(cab);
+                }
+                else if (escolha == 2)
+                {
+                    remove_recurso(cab);
+                }
+                else if (escolha == 3)
+                {
+                    // lista_recurso();
+                }
+                else if (escolha == 4)
+                {
+                    //busca_recurso();
+                }
+                else if (escolha == 5)
+                {
+                    //ocupa_recurso
+                }
+                
+            }
+            
         }
     }
     //printf("%s\n", vetalunos[0]->nome);
