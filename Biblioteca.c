@@ -17,7 +17,7 @@ typedef struct
     int ano; //Para fins de otimização de memória, pode ser uma boa idéia colocar um tipo menor
     char categoria[20];
     int status; // Disponivel = 1 | Emprestado = 0
-
+    int aluno;
 } livros;
 
 typedef struct
@@ -35,6 +35,8 @@ void cadastro_aluno(alunos *p){
     printf("Qual o nome do aluno?\n");
     scanf(" %[^\n]", nome);
     strcpy(p->nome, nome);
+    //printf("%s", p->nome);
+    //p->livro = -1;
     return;
 }
 
@@ -53,7 +55,7 @@ void lista_aluno(alunos **vet, int quantidade){
     {
         if (vet[i] != NULL)
         {
-            printf("NOME: %s ID: %d\n", vet[i]->nome, i);
+            printf("NOME: %s\nID: %d\nMATRICULA: %s\n", vet[i]->nome, i, vet[i]->matricula); //Por algum motivo, esse print tá começando na posição errada v[1] é igual a o que deveria ser v[0]
         }
     }
     
@@ -105,6 +107,8 @@ void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixa
 
     vet[*cadastrados]->ano = ano;
 
+    vet[*cadastrados]->status = 1;
+
     *cadastrados += 1;
 }
 
@@ -122,6 +126,14 @@ void lista_livro(livros **vet, int cadastrados){
         if (vet[i] != NULL)
         {
             printf("ID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", i, vet[i]->nome, vet[i]->categoria, vet[i]->ano);
+            if (vet[i]->status == 0)
+            {
+                printf("STATUS: Emprestado para o aluno de ID: %d\n", vet[i]->aluno);
+            }
+            else{
+                printf("STATUS: Disponível\n");
+            }
+            
         }
     }
     
@@ -141,6 +153,13 @@ void busca_livro(livros **vet, int cadastrados){
         }
         else{
             printf("Livro encontrado!\nID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", id, vet[id]->nome, vet[id]->categoria, vet[id]->ano);
+            if (vet[id]->status == 0)
+            {
+                printf("STATUS: Emprestado para o aluno de ID: %d\n", vet[id]->aluno);
+            }
+            else{
+                printf("STATUS: Disponível\n");
+            }
         }
     }
     else if(escolha == 2)
@@ -156,9 +175,59 @@ void busca_livro(livros **vet, int cadastrados){
             if (strcmp(tmp, vet[i]->categoria) == 0)
             {
                 printf("NOME: %s\nID: %d\n", vet[i]->nome, i);
+                if (vet[i]->status == 0)
+                {
+                printf("STATUS: Emprestado\n");
+                }
+                else{
+                printf("STATUS: Disponível\n");
+                }
             }   
         }
     }
+}
+
+void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalalunos){
+    int escolha, id, aluno;
+    printf("1- EMPRESTAR\n2- DEVOLVER\n");
+    scanf("%d", &escolha);
+    if (escolha == 1)
+    {
+        printf("Qual ID do livro que será emprestado?\n");
+        scanf("%d", &id);
+        if (id < (cadastrados - 1) && vet[id] != NULL)//Talvez de problema verificar se é NULL se a posição for inválida
+        {
+            printf("Qual ID do aluno que ficará com o livro?\n");
+            scanf("%d", &aluno);
+            if (aluno < (totalalunos - 1) && pessoas[id] != NULL)
+            {
+                pessoas[aluno]->livro = id;
+                vet[id]->aluno = aluno;
+                vet[id]->status = 0;
+            }
+            else{
+                printf("Aluno não está no sistema\n");
+            }
+        }
+        else{
+            printf("Livro não está no sistema, verifique ID!\n");
+        }
+    }
+    else if (escolha == 2)
+    {
+        printf("Qual ID do livro que será devolvido?\n");
+        scanf("%d", &id);
+        if (id > (cadastrados - 1) || vet[id] == NULL)
+        {
+            printf("Livro não está no sistema, verifique ID!\n");
+        }
+        else{
+            vet[id]->status = 1;
+            pessoas[vet[id]->aluno]->livro = -1;
+            vet[id]->aluno = -1;
+        }
+    }
+    
     
 }
 
@@ -166,6 +235,7 @@ int main(int argc, char const *argv[])
 {
     //Alocando vetor de alunos
     alunos **vetalunos = (alunos **)malloc(sizeof(alunos *));
+    //vetalunos[0] = (alunos *)malloc(sizeof(alunos));
     //vetalunos[i]->nome;
     //chamada -> rm_aluno(v[i])
     //rm_aluno(struct aluno *p)
@@ -272,7 +342,7 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 5)
                 {
-                    //empresta_livro();
+                    empresta_livro(vetlivros, vetalunos, sistema_livros, matriculados);
                 }
             }
             escolha = 1;
@@ -286,7 +356,7 @@ int main(int argc, char const *argv[])
             //pesquisa();
         }
     }
-    //printf("%s\n", vetlivros[0]->nome);
+    //printf("%s\n", vetalunos[0]->nome);
     
     return 0;
 }
