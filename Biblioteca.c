@@ -9,7 +9,7 @@ typedef struct
     char nome[50];
     char matricula[12]; //Matrícula do cefet tem 11 caracteres ex: 2112227GCOM
     int livro;
-    //int teste;
+    int recurso;
 } alunos;
 
 typedef struct
@@ -39,6 +39,7 @@ void cadastro_aluno(alunos *p){
     strcpy(p->nome, nome);
     //printf("%s", p->nome);
     p->livro = -1;
+    p->recurso = -1;
     return;
 }
 
@@ -47,13 +48,13 @@ void remove_aluno(alunos **vet){
     printf("Digite o ID do aluno que quer remover\n");
     scanf("%d", &id);
     //TODO Verificar se possui algo emprestado
-    if (vet[id]->livro == -1)
+    if (vet[id]->livro == -1 && vet[id]->recurso == -1)
     {
         free(vet[id]);
         vet[id] = NULL;
     }
     else{
-        printf("O aluno possui algum livro emprestado! Operação canceldada!\n");
+        printf("O aluno possui alguma pendência com a biblioteca! Operação canceladada!\n");
     }
 }
 
@@ -286,6 +287,7 @@ void cadastro_recurso(recurso *cab){
         strcpy(p->tipo, "Armário");
     }
     p->aluno = -1;
+    p->status = 1;
     printf("RECURSO CADASTRADO!\n");
     p->prox = cab->prox;
     cab->prox = p;
@@ -301,9 +303,15 @@ void remove_recurso(recurso *cab){
     p = busca_recurso(cab, id, &ant);
     if (p != NULL)
     {
-        ant->prox = p->prox;
-        free(p);
-        printf("Recurso removido com sucesso!\n");
+        if(p->status == 1)
+        {
+            ant->prox = p->prox;
+            free(p);
+            printf("Recurso removido com sucesso!\n");
+        }
+        else{
+            printf("Recurso ocupado! Operação cancelada\n");
+        }
     }
     else{
         printf("Recurso não encontrado! Verifique o ID.\n");
@@ -311,7 +319,7 @@ void remove_recurso(recurso *cab){
     
 }
 
-void lista_recurso(recurso *cab){
+void lista_recurso(recurso *cab, alunos **pessoas){
     if (cab->prox == NULL)
     {
         printf("Nenhum recurso cadastrado!\n");
@@ -323,13 +331,19 @@ void lista_recurso(recurso *cab){
     while (p != NULL)
     {
         printf("ID: %d\nTIPO: %s\n", p->ID, p->tipo);
-        //TODO STATUS
+        if (p->status == 0)
+        {
+            printf("STATUS: Ocupado pelo aluno de matrícula: %s\n", pessoas[p->aluno]->matricula);
+        }
+        else{
+            printf("STATUS: Disponível\n");
+        }
         p = p->prox;
     }
     
 }
 
-void busca_recurso_menu(recurso *cab){
+void busca_recurso_menu(recurso *cab, alunos **pessoas){
     recurso *ant = NULL;
     recurso *p;
     int id;
@@ -340,6 +354,14 @@ void busca_recurso_menu(recurso *cab){
     {
         printf("Recurso encontrado:\nID: %d\nTIPO: %s\n", p->ID, p->tipo);
         // TODO STATUS
+        if (p->status == 0)
+        {
+            printf("STATUS: Ocupado pelo aluno de matrícula: %s\n", pessoas[p->aluno]->matricula);
+        }
+        else{
+            printf("STATUS: Disponível\n");
+        }
+        
     }
     else{
         printf("Recurso não encontrado! Verifique o ID.\n");
@@ -368,6 +390,7 @@ void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
                 // pessoas[aluno]->livro = id;
                 // vet[id]->aluno = aluno;
                 // vet[id]->status = 0;
+                pessoas[aluno]->recurso = id;
                 p->aluno = aluno;
                 p->status = 0;
             }
@@ -388,6 +411,7 @@ void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
         p = busca_recurso(cab, id, &ant);
         if (p != NULL)
         {
+            pessoas[p->aluno]->recurso = -1;
             p->aluno = -1;
             p->status = 1;
         }
@@ -538,11 +562,11 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 3)
                 {
-                    lista_recurso(cab);
+                    lista_recurso(cab, vetalunos);
                 }
                 else if (escolha == 4)
                 {
-                    busca_recurso_menu(cab);
+                    busca_recurso_menu(cab, vetalunos);
                 }
                 else if (escolha == 5)
                 {
