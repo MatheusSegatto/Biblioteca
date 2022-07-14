@@ -21,7 +21,7 @@ typedef struct
     int aluno;
 } livros;
 
-typedef struct
+typedef struct recurso
 {
     int ID; // Nesse caso, como é inserido manualmente, tenho que deixar na struct
     int status; //Livre = 1 | Emprestado = 0
@@ -246,7 +246,16 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
         }
     }
 }
-
+recurso * busca_recurso(recurso *cab, int id, recurso **ant){
+    (*ant) = cab;
+    recurso *p = cab->prox;
+    while (p != NULL && p->ID != id)
+    {
+        (*ant) = p;
+        p = p->prox;
+    }
+    return p;
+}
 void cadastro_recurso(recurso *cab){
     recurso *ant = NULL;
     int id;
@@ -301,15 +310,21 @@ void remove_recurso(recurso *cab){
     
 }
 
-recurso * busca_recurso(recurso *cab, int id, recurso **ant){
-    (*ant) = cab;
-    recurso *p = cab->prox;
-    while (p != NULL && p->ID != id)
+void lista_recurso(recurso *cab){
+    if (cab->prox == NULL)
     {
-        (*ant) = p;
+        printf("Nenhum recurso cadastrado!\n");
+        return;
+    }
+    
+    recurso *p = cab->prox;
+    printf("RECURSOS:\n");
+    while (p != NULL)
+    {
+        printf("ID: %d\nTIPO: %s\n", p->ID, p->tipo);
         p = p->prox;
     }
-    return p;
+    
 }
 
 int main(int argc, char const *argv[])
@@ -439,6 +454,7 @@ int main(int argc, char const *argv[])
             while (escolha != 0)
             {
                 printf("1- Cadastrar recurso\n2- Remover recurso\n3- Listar recurso\n4- Buscar recurso\n5- Ocupar recurso\n0- Sair\n");
+                scanf("%d", &escolha);
                 if (escolha == 1)
                 {
                     cadastro_recurso(cab);
@@ -449,7 +465,7 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 3)
                 {
-                    // lista_recurso();
+                    lista_recurso(cab);
                 }
                 else if (escolha == 4)
                 {
