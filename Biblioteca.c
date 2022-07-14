@@ -37,7 +37,7 @@ void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int 
     int status = 0;
     for (int i = 0; i < *matriculados; i++)
     {
-        if (vet[i] != NULL && strcmp(vet[i]->matricula, matricula) == 0)
+        if ((*tabela) != NULL && strcmp((*tabela)[i]->matricula, matricula) == 0)
         {
             printf("Aluno já cadastrado! Operação cancelada\n");
             status = 1;
@@ -52,14 +52,14 @@ void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int 
             *tabela = realloc(*tabela, (35 * (*turmas)) * sizeof(alunos *));
             for (size_t i = (35 * ((*turmas) - 1)); i < (35 * (*turmas)); i++)
             {
-                *tabela[i] = (alunos *)malloc(sizeof(alunos));
+                (*tabela)[i] = (alunos *)malloc(sizeof(alunos));
             }
         }
-        strcpy(vet[*matriculados]->matricula, matricula);
+        strcpy((*tabela)[*matriculados]->matricula, matricula);
         printf("Qual o nome do aluno?\n");
-        scanf(" %[^\n]", vet[*matriculados]->nome); //? Será que funciona dessa forma?
-        vet[*matriculados]->livro = -1;
-        vet[*matriculados]->recurso = -1;
+        scanf(" %[^\n]", (*tabela)[*matriculados]->nome); //? Será que funciona dessa forma?
+        (*tabela)[*matriculados]->livro = -1;
+        (*tabela)[*matriculados]->recurso = -1;
         *matriculados += 1;
     }
 }
@@ -118,7 +118,7 @@ void busca_aluno(alunos **vet, int cadastrados){
 // alunos * pesquisa_aluno(int sw, char *procurado,alunos *cab, alunos **ant){}
 
 
-void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixas){
+void cadastro_livro(livros ***tabela, int *cadastrados, int *caixas){
     //Para alterar, usar *caixas
     if ((*cadastrados + 1) > (*caixas * 50))
     {
@@ -126,14 +126,14 @@ void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixa
         *tabela = realloc(*tabela, (50 * (*caixas)) * sizeof(livros *));
         for (size_t i = (50 * ((*caixas) - 1)); i < (50 * (*caixas)); i++)
         {
-            *tabela[i] = (livros *)malloc(sizeof(livros)); //É *tabela msm? Quando coloquei só "tabela" recebi um warning do gcc
+            (*tabela)[i] = (livros *)malloc(sizeof(livros)); //É *tabela msm? Quando coloquei só "tabela" recebi um warning do gcc
         }
     }
     char tmp[20];
     int ano;
     printf("Qual o nome do livro?\n");
     scanf(" %[^\n]", tmp);
-    strcpy(vet[*cadastrados]->nome, tmp);
+    strcpy((*tabela)[*cadastrados]->nome, tmp);
 
     printf("Qual categoria do livro?\n");
     scanf(" %[^\n]", tmp);
@@ -141,14 +141,14 @@ void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixa
         {
             tmp[i] = tolower(tmp[i]);
         }
-    strcpy(vet[*cadastrados]->categoria, tmp);
+    strcpy((*tabela)[*cadastrados]->categoria, tmp);
 
     printf("Qual o ano de publicação?\n");
     scanf("%d", &ano);
 
-    vet[*cadastrados]->ano = ano;
+    (*tabela)[*cadastrados]->ano = ano;
 
-    vet[*cadastrados]->status = 1;
+    (*tabela)[*cadastrados]->status = 1;
 
     *cadastrados += 1;
 }
@@ -525,7 +525,7 @@ int main(int argc, char const *argv[])
                 scanf("%d", &escolha);
                 if (escolha == 1)
                 {
-                    cadastro_livro(&vetlivros, vetlivros, &sistema_livros, &caixas);
+                    cadastro_livro(&vetlivros, &sistema_livros, &caixas);
                 }
                 else if (escolha == 2)
                 {
