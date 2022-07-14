@@ -30,6 +30,39 @@ typedef struct recurso
     struct recurso *prox;
 } recurso;
 
+void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int *turmas){
+    char matricula[12];
+    printf("Qual a matrícula do aluno que será cadastrado?\n");
+    scanf(" %[^\n]", matricula);
+    int status = 0;
+    for (int i = 0; i < *matriculados; i++)
+    {
+        if (vet[i] != NULL && strcmp(vet[i]->matricula, matricula) == 0)
+        {
+            printf("Aluno já cadastrado! Operação cancelada\n");
+            status = 1;
+            break;
+        }
+    }
+    if (status == 0)
+    {
+        if ((*matriculados + 1) > ((*turmas) * 35))
+        {
+            *turmas += 1;
+            *tabela = realloc(*tabela, (35 * (*turmas)) * sizeof(alunos *));
+            for (size_t i = (35 * ((*turmas) - 1)); i < (35 * (*turmas)); i++)
+            {
+                *tabela[i] = (alunos *)malloc(sizeof(alunos));
+            }
+        }
+        strcpy(vet[*matriculados]->matricula, matricula);
+        printf("Qual o nome do aluno?\n");
+        scanf(" %[^\n]", vet[*matriculados]->nome); //? Será que funciona dessa forma?
+        vet[*matriculados]->livro = -1;
+        vet[*matriculados]->recurso = -1;
+        *matriculados += 1;
+    }
+}
 
 void cadastro_aluno(alunos *p){
     char nome[50];
@@ -87,7 +120,7 @@ void busca_aluno(alunos **vet, int cadastrados){
 
 void cadastro_livro(livros ***tabela, livros **vet, int *cadastrados, int *caixas){
     //Para alterar, usar *caixas
-    if (*cadastrados > (*caixas * 50))
+    if ((*cadastrados + 1) > (*caixas * 50))
     {
         *caixas += 1;
         *tabela = realloc(*tabela, (50 * (*caixas)) * sizeof(livros *));
@@ -467,40 +500,7 @@ int main(int argc, char const *argv[])
                 printf("MENU:\n1- Cadastrar aluno\n2- Remover aluno\n3- Listar alunos\n4- Pesquisar aluno\n0- Sair\n");
                 scanf("%d", &escolha);
                 if(escolha == 1){
-                    //Perguntar matrícula antes de entrar na função
-                    printf("Qual a matrícula do aluno?\n");
-                    char matricula[12];//Matrícula do cefet tem 11 caracteres ex: 2112227GCOM
-                    scanf("%s", matricula);
-                    int status = 0;
-                    //Verficando se aluno já está matriculado
-                    for (int i = 0; i < matriculados; i++)
-                    {
-                        //TODO Como faria pra entrar na função sem modificar quantidade de cadastrados
-                        if (vetalunos[i] != NULL && strcmp(matricula, vetalunos[i]->matricula) == 0)
-                        {
-                            printf("Aluno já cadastrado! ID: %d\n", i);
-                            status = 1;
-                            break;
-                        }
-                    }
-                    if(status == 0)
-                    {
-                    
-                    if ((matriculados + 1) > (35 * turmas))
-                    {
-                        //Aumentar vetor de alunos
-                        turmas += 1;
-                        vetalunos = realloc(vetalunos, (35 * turmas) * sizeof(alunos *));
-                        for (size_t i = (35 * (turmas - 1)); i < (35 * turmas); i++)
-                        {
-                            vetalunos[i] = (alunos *)malloc(sizeof(alunos));
-                        }
-                        
-                    }
-                    strcpy(vetalunos[matriculados]->matricula, matricula);
-                    cadastro_aluno(vetalunos[matriculados]);
-                    matriculados += 1;
-                    }
+                    novo_cadastro_aluno(&vetalunos, vetalunos, &matriculados, &turmas);
                 }
                 else if (escolha == 2)
                 {
