@@ -217,7 +217,7 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
         {
             printf("Qual ID do aluno que ficará com o livro?\n");
             scanf("%d", &aluno);
-            if (aluno < (totalalunos) && pessoas[id] != NULL)
+            if (aluno < (totalalunos) && pessoas[aluno] != NULL)
             {
                 pessoas[aluno]->livro = id;
                 vet[id]->aluno = aluno;
@@ -285,6 +285,7 @@ void cadastro_recurso(recurso *cab){
     {
         strcpy(p->tipo, "Armário");
     }
+    p->aluno = -1;
     printf("RECURSO CADASTRADO!\n");
     p->prox = cab->prox;
     cab->prox = p;
@@ -305,7 +306,7 @@ void remove_recurso(recurso *cab){
         printf("Recurso removido com sucesso!\n");
     }
     else{
-        printf("Elemento não está na lista! Verifique o ID.\n");
+        printf("Recurso não encontrado! Verifique o ID.\n");
     }
     
 }
@@ -322,8 +323,80 @@ void lista_recurso(recurso *cab){
     while (p != NULL)
     {
         printf("ID: %d\nTIPO: %s\n", p->ID, p->tipo);
+        //TODO STATUS
         p = p->prox;
     }
+    
+}
+
+void busca_recurso_menu(recurso *cab){
+    recurso *ant = NULL;
+    recurso *p;
+    int id;
+    printf("Qual ID do recurso buscado?\n");
+    scanf("%d", &id);
+    p = busca_recurso(cab, id, &ant);
+    if (p != NULL)
+    {
+        printf("Recurso encontrado:\nID: %d\nTIPO: %s\n", p->ID, p->tipo);
+        // TODO STATUS
+    }
+    else{
+        printf("Recurso não encontrado! Verifique o ID.\n");
+    }
+
+}
+
+void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
+    recurso *ant = NULL;
+    recurso *p;
+    int id, escolha, aluno;
+    printf("1- OCUPAR RECURSO\n2- DESOCUPAR RECURSO\n");
+    scanf("%d", &escolha);
+    if (escolha == 1)
+    {
+        // Ocupar
+        printf("Qual ID do recurso que será ocupado?\n");
+        scanf("%d", &id);
+        p = busca_recurso(cab, id, &ant);
+        if (p != NULL)
+        {
+            printf("Qual ID do aluno que ocupará o recurso?\n");
+            scanf("%d", &aluno);
+            if (aluno < (totalalunos) && pessoas[aluno] != NULL)
+            {
+                // pessoas[aluno]->livro = id;
+                // vet[id]->aluno = aluno;
+                // vet[id]->status = 0;
+                p->aluno = aluno;
+                p->status = 0;
+            }
+            else{
+                printf("Aluno não está no sistema\n");
+            }
+
+        }
+        else{
+            printf("Recurso não encontrado! Verifique o ID.\n");
+    }
+    }
+    else if (escolha ==2)
+    {
+        // Desocupar
+        printf("Qual ID do recurso que será desocupado?\n");
+        scanf("%d", &id);
+        p = busca_recurso(cab, id, &ant);
+        if (p != NULL)
+        {
+            p->aluno = -1;
+            p->status = 1;
+        }
+        else{
+            printf("Recurso não encontrado! Verifique o ID.\n");
+        }
+    }
+    
+    
     
 }
 
@@ -469,15 +542,15 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 4)
                 {
-                    //busca_recurso();
+                    busca_recurso_menu(cab);
                 }
                 else if (escolha == 5)
                 {
-                    //ocupa_recurso
+                    ocupa_recurso(cab, vetalunos, matriculados);
                 }
                 
             }
-            
+            escolha = 1;
         }
     }
     //printf("%s\n", vetalunos[0]->nome);
