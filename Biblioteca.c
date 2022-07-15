@@ -10,6 +10,7 @@ typedef struct
     char matricula[12]; //Matrícula do cefet tem 11 caracteres ex: 2112227GCOM
     int livro;
     int recurso;
+    int auxlivros;
 } alunos;
 
 typedef struct
@@ -61,6 +62,7 @@ void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int 
         scanf(" %[^\n]", (*tabela)[*matriculados]->nome); //? Será que funciona dessa forma?
         (*tabela)[*matriculados]->livro = -1;
         (*tabela)[*matriculados]->recurso = -1;
+        (*tabela)[*matriculados]->auxlivros = 0;
         *matriculados += 1;
         printf("Aluno Cadastrado com sucesso!\n");
         
@@ -69,18 +71,6 @@ void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int 
     char saida;
     printf("Pressione qualquer tecla para sair\n");
     scanf("%s", &saida);
-}
-
-void cadastro_aluno(alunos *p){
-    char nome[50];
-
-    printf("Qual o nome do aluno?\n");
-    scanf(" %[^\n]", nome);
-    strcpy(p->nome, nome);
-    //printf("%s", p->nome);
-    p->livro = -1;
-    p->recurso = -1;
-    return;
 }
 
 void remove_aluno(alunos **vet, int matriculados){
@@ -92,7 +82,7 @@ void remove_aluno(alunos **vet, int matriculados){
     if(id < matriculados && vet[id] != NULL){
 
     
-        if (vet[id]->livro == -1 && vet[id]->recurso == -1)
+        if (vet[id]->livro == -1 && vet[id]->recurso == -1 && vet[id]->auxlivros == 0)
         {
             free(vet[id]);
             vet[id] = NULL;
@@ -118,7 +108,7 @@ void lista_aluno(alunos **vet, int quantidade){
         if (vet[i] != NULL)
         {
             printf("====================================\n");
-            printf("NOME: %s\nID: %d\nMATRICULA: %s\n", vet[i]->nome, i, vet[i]->matricula); //Por algum motivo, esse print tá começando na posição errada v[1] é igual a o que deveria ser v[0]
+            printf("NOME: %s\nID: %d\nMATRICULA: %s\nSTATUS: %d livros emprestados\n", vet[i]->nome, i, vet[i]->matricula, vet[i]->auxlivros);
         }
     }
     printf("====================================\n");
@@ -135,7 +125,7 @@ void busca_aluno(alunos **vet, int cadastrados){
     if (id < (cadastrados) && vet[id] != NULL)
     {
         printf("====================================\n");
-        printf("Aluno encontrado!\nNOME: %s\nMATRICULA: %s\n", vet[id]->nome, vet[id]->matricula);
+        printf("Aluno encontrado!\nNOME: %s\nMATRICULA: %s\nSTATUS: %d livros emprestados\n", vet[id]->nome, vet[id]->matricula, vet[id]->auxlivros);
     }
     else
     {
@@ -316,6 +306,7 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
                 pessoas[aluno]->livro = id;
                 vet[id]->aluno = aluno;
                 vet[id]->status = 0;
+                pessoas[aluno]->auxlivros += 1;
                 printf("Livro emprestado!\n");
             }
             else{
@@ -334,7 +325,9 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
         {
             vet[id]->status = 1;
             pessoas[vet[id]->aluno]->livro = -1;
+            pessoas[vet[id]->aluno]->auxlivros -= 1;
             vet[id]->aluno = -1;
+            printf("Livro devolvido à biblioteca com sucesso!\n");
         }
         else{
             printf("Livro não está no sistema, verifique ID!\n");
@@ -435,6 +428,10 @@ void lista_recurso(recurso *cab, alunos **pessoas){
     if (cab->prox == NULL)
     {
         printf("Nenhum recurso cadastrado!\n");
+        printf("====================================\n");
+        char saida;
+        printf("Pressione qualquer tecla para sair\n");
+        scanf("%s", &saida);
         return;
     }
     
