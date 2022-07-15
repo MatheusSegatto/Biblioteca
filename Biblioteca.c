@@ -31,6 +31,7 @@ typedef struct recurso
 } recurso;
 
 void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int *turmas){
+    system("clear");
     char matricula[12];
     printf("Qual a matrícula do aluno que será cadastrado?\n");
     scanf(" %[^\n]", matricula);
@@ -61,7 +62,13 @@ void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int 
         (*tabela)[*matriculados]->livro = -1;
         (*tabela)[*matriculados]->recurso = -1;
         *matriculados += 1;
+        printf("Aluno Cadastrado com sucesso!\n");
+        
     }
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 void cadastro_aluno(alunos *p){
@@ -76,49 +83,75 @@ void cadastro_aluno(alunos *p){
     return;
 }
 
-void remove_aluno(alunos **vet){
+void remove_aluno(alunos **vet, int matriculados){
+    system("clear");
     int id = 0;
     printf("Digite o ID do aluno que quer remover\n");
     scanf("%d", &id);
     //TODO Verificar se possui algo emprestado
-    if (vet[id]->livro == -1 && vet[id]->recurso == -1)
-    {
-        free(vet[id]);
-        vet[id] = NULL;
+    if(id < matriculados && vet[id] != NULL){
+
+    
+        if (vet[id]->livro == -1 && vet[id]->recurso == -1)
+        {
+            free(vet[id]);
+            vet[id] = NULL;
+            printf("Aluno removido do sistema!\n");
+        }
+        else{
+            printf("O aluno possui alguma pendência com a biblioteca! Operação canceladada!\n");
+        }
     }
     else{
-        printf("O aluno possui alguma pendência com a biblioteca! Operação canceladada!\n");
+        printf("Aluno não está no sistema!\n");
     }
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 void lista_aluno(alunos **vet, int quantidade){
+    system("clear");
     for (int i = 0; i < quantidade; i++)
     {
         if (vet[i] != NULL)
         {
+            printf("====================================\n");
             printf("NOME: %s\nID: %d\nMATRICULA: %s\n", vet[i]->nome, i, vet[i]->matricula); //Por algum motivo, esse print tá começando na posição errada v[1] é igual a o que deveria ser v[0]
         }
     }
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
     
 }
 void busca_aluno(alunos **vet, int cadastrados){
+    system("clear");
     printf("Qual ID do aluno procurado?\n");
     int id;
     scanf("%d", &id);
     if (id < (cadastrados) && vet[id] != NULL)
     {
+        printf("====================================\n");
         printf("Aluno encontrado!\nNOME: %s\nMATRICULA: %s\n", vet[id]->nome, vet[id]->matricula);
     }
     else
     {
         printf("Aluno não existe no sistema");
     }
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 // alunos * pesquisa_aluno(int sw, char *procurado,alunos *cab, alunos **ant){}
 
 
 void cadastro_livro(livros ***tabela, int *cadastrados, int *caixas){
+    system("clear");
     //Para alterar, usar *caixas
     if ((*cadastrados + 1) > (*caixas * 50))
     {
@@ -151,9 +184,16 @@ void cadastro_livro(livros ***tabela, int *cadastrados, int *caixas){
     (*tabela)[*cadastrados]->status = 1;
 
     *cadastrados += 1;
+
+    printf("====================================\n");
+    printf("Livro cadastrado com sucesso!\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 void remove_livro(livros **vet, int cadastrados){
+    system("clear");
     int id;
     printf("Digite o ID do livro que deseja remover\n");
     scanf("%d", &id);
@@ -165,18 +205,25 @@ void remove_livro(livros **vet, int cadastrados){
         else{
             free(vet[id]);
             vet[id] = NULL;
+            printf("Livro removido do sistema!\n");
         }
     }
     else{
-        printf("Livro não está no sistema, verifique o ID! Operação cancelada");
+        printf("Livro não está no sistema, verifique o ID! Operação cancelada\n");
     }
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 void lista_livro(livros **vet, int cadastrados, alunos **pessoas){
+    system("clear");
     for (int i = 0; i < cadastrados; i++)
     {
         if (vet[i] != NULL)
         {
+            printf("====================================\n");
             printf("ID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", i, vet[i]->nome, vet[i]->categoria, vet[i]->ano);
             if (vet[i]->status == 0)
             {
@@ -188,9 +235,14 @@ void lista_livro(livros **vet, int cadastrados, alunos **pessoas){
             
         }
     }
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
     
 }
 void busca_livro(livros **vet, int cadastrados){
+    system("clear");
     int escolha, id;
     char tmp[20];
     printf("1- Buscar por ID\n2- Buscar por categoria\n");
@@ -204,6 +256,7 @@ void busca_livro(livros **vet, int cadastrados){
             printf("Livro não está no sistema!\n");
         }
         else{
+            printf("====================================\n");
             printf("Livro encontrado!\nID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", id, vet[id]->nome, vet[id]->categoria, vet[id]->ano);
             if (vet[id]->status == 0)
             {
@@ -213,6 +266,7 @@ void busca_livro(livros **vet, int cadastrados){
                 printf("STATUS: Disponível\n");
             }
         }
+        
     }
     else if(escolha == 2)
     {
@@ -226,6 +280,7 @@ void busca_livro(livros **vet, int cadastrados){
         {
             if (strcmp(tmp, vet[i]->categoria) == 0)
             {
+                printf("====================================\n");
                 printf("NOME: %s\nID: %d\n", vet[i]->nome, i);
                 if (vet[i]->status == 0)
                 {
@@ -237,9 +292,14 @@ void busca_livro(livros **vet, int cadastrados){
             }   
         }
     }
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalalunos){
+    system("clear");
     int escolha, id, aluno;
     printf("1- EMPRESTAR\n2- DEVOLVER\n");
     scanf("%d", &escolha);
@@ -256,6 +316,7 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
                 pessoas[aluno]->livro = id;
                 vet[id]->aluno = aluno;
                 vet[id]->status = 0;
+                printf("Livro emprestado!\n");
             }
             else{
                 printf("Aluno não está no sistema\n");
@@ -279,6 +340,10 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
             printf("Livro não está no sistema, verifique ID!\n");
         }
     }
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 recurso * busca_recurso(recurso *cab, int id, recurso **ant){
     (*ant) = cab;
@@ -291,6 +356,7 @@ recurso * busca_recurso(recurso *cab, int id, recurso **ant){
     return p;
 }
 void cadastro_recurso(recurso *cab){
+    system("clear");
     recurso *ant = NULL;
     int id;
     printf("Insira o ID do recurso\n");
@@ -299,6 +365,10 @@ void cadastro_recurso(recurso *cab){
     if (p != NULL)
     {
         printf("Recurso já cadastrado! Operação cancelada.\n");
+        printf("====================================\n");
+        char saida;
+        printf("Pressione qualquer tecla para sair\n");
+        scanf("%s", &saida);
         return;
     }
     //Inserção do recurso
@@ -324,9 +394,14 @@ void cadastro_recurso(recurso *cab){
     printf("RECURSO CADASTRADO!\n");
     p->prox = cab->prox;
     cab->prox = p;
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 void remove_recurso(recurso *cab){
+    system("clear");
     recurso *ant = NULL;
     recurso *p;
     int id;
@@ -349,10 +424,14 @@ void remove_recurso(recurso *cab){
     else{
         printf("Recurso não encontrado! Verifique o ID.\n");
     }
-    
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 void lista_recurso(recurso *cab, alunos **pessoas){
+    system("clear");
     if (cab->prox == NULL)
     {
         printf("Nenhum recurso cadastrado!\n");
@@ -363,6 +442,7 @@ void lista_recurso(recurso *cab, alunos **pessoas){
     printf("RECURSOS:\n");
     while (p != NULL)
     {
+        printf("====================================\n");
         printf("ID: %d\nTIPO: %s\n", p->ID, p->tipo);
         if (p->status == 0)
         {
@@ -373,10 +453,14 @@ void lista_recurso(recurso *cab, alunos **pessoas){
         }
         p = p->prox;
     }
-    
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 void busca_recurso_menu(recurso *cab, alunos **pessoas){
+    system("clear");
     recurso *ant = NULL;
     recurso *p;
     int id;
@@ -385,6 +469,7 @@ void busca_recurso_menu(recurso *cab, alunos **pessoas){
     p = busca_recurso(cab, id, &ant);
     if (p != NULL)
     {
+        printf("====================================\n");
         printf("Recurso encontrado:\nID: %d\nTIPO: %s\n", p->ID, p->tipo);
         // TODO STATUS
         if (p->status == 0)
@@ -399,10 +484,14 @@ void busca_recurso_menu(recurso *cab, alunos **pessoas){
     else{
         printf("Recurso não encontrado! Verifique o ID.\n");
     }
-
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
 }
 
 void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
+    system("clear");
     recurso *ant = NULL;
     recurso *p;
     int id, escolha, aluno;
@@ -426,6 +515,7 @@ void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
                 pessoas[aluno]->recurso = id;
                 p->aluno = aluno;
                 p->status = 0;
+                printf("Recurso ocupado com sucesso!\n");
             }
             else{
                 printf("Aluno não está no sistema\n");
@@ -447,13 +537,17 @@ void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
             pessoas[p->aluno]->recurso = -1;
             p->aluno = -1;
             p->status = 1;
+            printf("Recurso desocupado com sucesso!\n");
         }
         else{
             printf("Recurso não encontrado! Verifique o ID.\n");
         }
     }
     
-    
+    printf("====================================\n");
+    char saida;
+    printf("Pressione qualquer tecla para sair\n");
+    scanf("%s", &saida);
     
 }
 
@@ -492,11 +586,13 @@ int main(int argc, char const *argv[])
     int turmas = 1, escolha = 1, caixas = 1, sistema_livros = 0;
     while (escolha != 0) //Menu Principal
     {
+        system("clear");
         printf("MENU:\n1- Seção aluno\n2- Seção livro\n3- Seção recurso\n0- Sair\n");
         scanf("%d", &escolha);
         if (escolha == 1)
         {
             while(escolha != 0){ //Menu Aluno
+                system("clear");
                 printf("MENU:\n1- Cadastrar aluno\n2- Remover aluno\n3- Listar alunos\n4- Pesquisar aluno\n0- Sair\n");
                 scanf("%d", &escolha);
                 if(escolha == 1){
@@ -504,7 +600,7 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 2)
                 {
-                    remove_aluno(vetalunos);
+                    remove_aluno(vetalunos, matriculados);
                 }
                 else if (escolha == 3)
                 {
@@ -521,7 +617,8 @@ int main(int argc, char const *argv[])
         {
             while (escolha != 0)
             {
-                printf("1- Cadastrar livro\n2- Remover livro\n3- Listar livros\n4- Buscar livro\n5- Emprestar livro\n0- Sair\n");
+                system("clear");
+                printf("1- Cadastrar livro\n2- Remover livro\n3- Listar livros\n4- Buscar livro\n5- Empréstimo de livro\n0- Sair\n");
                 scanf("%d", &escolha);
                 if (escolha == 1)
                 {
@@ -550,7 +647,8 @@ int main(int argc, char const *argv[])
         {
             while (escolha != 0)
             {
-                printf("1- Cadastrar recurso\n2- Remover recurso\n3- Listar recurso\n4- Buscar recurso\n5- Ocupar recurso\n0- Sair\n");
+                system("clear");
+                printf("1- Cadastrar recurso\n2- Remover recurso\n3- Listar recurso\n4- Buscar recurso\n5- Ocupar/desocupar recurso\n0- Sair\n");
                 scanf("%d", &escolha);
                 if (escolha == 1)
                 {
