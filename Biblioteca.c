@@ -39,7 +39,7 @@ void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int 
     int status = 0;
     for (int i = 0; i < *matriculados; i++)
     {
-        if ((*tabela) != NULL && strcmp((*tabela)[i]->matricula, matricula) == 0)
+        if (vet[i] != NULL && strcmp(vet[i]->matricula, matricula) == 0)
         {
             printf("Aluno já cadastrado! Operação cancelada\n");
             status = 1;
@@ -115,6 +115,7 @@ void lista_aluno(alunos **vet, int quantidade){
     char saida;
     printf("Pressione qualquer tecla para sair\n");
     scanf("%s", &saida);
+    //system("pause");
     
 }
 void busca_aluno(alunos **vet, int cadastrados){
