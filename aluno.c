@@ -32,7 +32,7 @@ void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int 
         }
         strcpy((*tabela)[*matriculados]->matricula, matricula);
         printf("Qual o nome do aluno?\n");
-        scanf(" %[^\n]", (*tabela)[*matriculados]->nome); //? Será que funciona dessa forma?
+        scanf(" %[^\n]", (*tabela)[*matriculados]->nome);
         (*tabela)[*matriculados]->livro = -1;
         (*tabela)[*matriculados]->recurso = -1;
         (*tabela)[*matriculados]->pendencias = 0;

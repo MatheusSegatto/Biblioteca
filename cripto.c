@@ -68,19 +68,59 @@ void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livr
             } 
             if (id == i)
             {
-                fscanf(data, "%d", &vetalunos[i]->pendencias);
-                fscanf(data, "%d", &vetalunos[i]->livro);
-                fscanf(data, "%d", &vetalunos[i]->recurso);
-                fscanf(data, " %[^\n]", vetalunos[i]->nome);
-                fscanf(data, " %[^\n]", vetalunos[i]->matricula);
+                fscanf(data, "%d", &(*tab_alunos)[i]->pendencias);
+                fscanf(data, "%d", &(*tab_alunos)[i]->livro);
+                fscanf(data, "%d", &(*tab_alunos)[i]->recurso);
+                fscanf(data, " %[^\n]", (*tab_alunos)[i]->nome);
+                fscanf(data, " %[^\n]", (*tab_alunos)[i]->matricula);
                 correto = 1;
             }
             else{
-                free(vetalunos[i]);
-                vetalunos[i] = NULL;
+                free((*tab_alunos)[i]);
+                (*tab_alunos)[i] = NULL;
                 correto = 0;
             }
         }
+        fscanf(data, "%d", &(*sistema_livros));
+        fscanf(data, "%d", &(*caixas));
+        if ((*sistema_livros + 1) > ((*caixas) *50))
+        {
+            printf("ENTREI NOO REALLOC LIVRO\n");
+            *caixas += 1;
+            *tab_livros = realloc(*tab_livros, (50 * (*caixas)) * sizeof(livros *));
+            for (size_t i = (50 * ((*caixas) - 1)); i < (50 * (*caixas)); i++)
+            {
+                (*tab_livros)[i] = (livros *)malloc(sizeof(livros));
+            }
+        }
+        // printf("PASSEI DO REALOC\nLIVROS: %d\n", *sistema_livros);
+        // int lixo;
+        // scanf("%d", &lixo);
+        correto = 1;
+        for (int i = 0; i < *sistema_livros; i++)
+        {
+            if (correto == 1)
+            {
+                fscanf(data, "%d", &id);
+                // printf("%d\n", id);
+                // scanf("%d", &lixo);
+            }
+            if (id == i)
+            {
+                fscanf(data, "%d", &(*tab_livros)[i]->ano);
+                fscanf(data, "%d", &(*tab_livros)[i]->status);
+                fscanf(data, "%d", &(*tab_livros)[i]->aluno);
+                fscanf(data, " %[^\n]", (*tab_livros)[i]->nome);
+                fscanf(data, " %[^\n]", (*tab_livros)[i]->categoria);
+            }
+            else{
+                correto = 0;
+                free((*tab_livros)[i]);
+                (*tab_livros)[i] = NULL;
+            }
+        }
+        
+        
         //printf("%s\n", vetalunos[2]->nome);       
     }
 }
