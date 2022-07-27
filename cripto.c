@@ -85,7 +85,7 @@ void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livr
         fscanf(data, "%d", &(*caixas));
         if ((*sistema_livros + 1) > ((*caixas) *50))
         {
-            printf("ENTREI NOO REALLOC LIVRO\n");
+            //printf("ENTREI NOO REALLOC LIVRO\n");
             *caixas += 1;
             *tab_livros = realloc(*tab_livros, (50 * (*caixas)) * sizeof(livros *));
             for (size_t i = (50 * ((*caixas) - 1)); i < (50 * (*caixas)); i++)
@@ -119,8 +119,24 @@ void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livr
                 (*tab_livros)[i] = NULL;
             }
         }
-        
-        
-        //printf("%s\n", vetalunos[2]->nome);       
+        // Recurso:
+        recurso *p = cab->prox;
+        while (fscanf(data, "%d", &id) != EOF)
+        {
+            // printf("ENtrou no while\n");
+            //int lixo;
+            p = (recurso *)malloc(sizeof(recurso));
+            p->ID = id;
+            // printf("%d\n", id);
+            fscanf(data, "%d", &(p->status));
+            // printf("%d\n", p->status);
+            fscanf(data, "%d", &(p->aluno));
+            // printf("%d\n", p->aluno);
+            fscanf(data, " %[^\n]", p->tipo);
+            // printf("%s\n", p->tipo);
+            //scanf("%d", &lixo);
+            p->prox = cab->prox;
+            cab->prox = p;
+        }
     }
 }
