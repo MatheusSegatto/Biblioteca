@@ -9,6 +9,7 @@ void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matri
     FILE *data;
     int tam_senha = strlen(senha);
     int key = 0, soma = 0, j = 0;
+    int verificador = 321;
     //int lixo;
     for (size_t i = 0; i < tam_senha; i++)
     {
@@ -18,7 +19,7 @@ void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matri
     //scanf("%d", &lixo);
     data = fopen("data.txt", "w");
 
-    fprintf(data, "%d %d ", (matriculados + key), (turmas + key));
+    fprintf(data, "%d\n%d %d ", (verificador + key), (matriculados + key), (turmas + key));
 
     // Tratando vetores de char
 
@@ -30,23 +31,30 @@ void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matri
             while(vetalunos[i]->nome[j] != '\0') //Só deixei um usando WHILE e outro usando FOR pq um bug no meu pc fez com que eu pensasse que o FOR não estva funcionando
             {
                 //printf("ENTREI NO WHILE\n");
-                soma = vetalunos[i]->nome[j] + key;
-                while (soma > 126)
+                // Verificar se o caractere é um espaço
+                if (vetalunos[i]->nome[j] != 32)
                 {
-                    soma -= 93;
+                    soma = vetalunos[i]->nome[j] + key;
+                    while (soma > 126)
+                    {
+                        soma -= 93;
+                    }
+                    vetalunos[i]->nome[j] = soma; //Talvez não funcione dessa forma
                 }
-                vetalunos[i]->nome[j] = soma; //Talvez não funcione dessa forma
                 j += 1;
             }
             for (int j = 0; j < strlen(vetalunos[i]->matricula); j++)
             {
                 //printf("ENTREI NO FOR\n");
-                soma = vetalunos[i]->matricula[j] + key;
-                while (soma > 126)
+                if(vetalunos[i]->matricula[j] != 32)
                 {
-                    soma -= 93;
+                    soma = vetalunos[i]->matricula[j] + key;
+                    while (soma > 126)
+                    {
+                        soma -= 93;
+                    }
+                    vetalunos[i]->matricula[j] = soma;
                 }
-                vetalunos[i]->matricula[j] = soma;
             }
             //printf("%d\n", soma);
             fprintf(data, "%d %d %d %d\n%s\n%s\n", (i + key), (vetalunos[i]->pendencias + key), (vetalunos[i]->livro + key), (vetalunos[i]->recurso + key), (vetalunos[i]->nome), (vetalunos[i]->matricula));
@@ -62,23 +70,29 @@ void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matri
             j = 0;
             while (vetlivros[i]->nome[j] != '\0')
             {
-                soma = vetlivros[i]->nome[j] + key;
-                while (soma > 126)
+                if(vetlivros[i]->nome[j] != 32)
                 {
-                    soma -= 93;
+                    soma = vetlivros[i]->nome[j] + key;
+                    while (soma > 126)
+                    {
+                        soma -= 93;
+                    }
+                    vetlivros[i]->nome[j] = soma;
                 }
-                vetlivros[i]->nome[j] = soma;
                 j += 1;
             }
             j = 0;
             while(vetlivros[i]->categoria[j] != '\0')
             {
-                soma = vetlivros[i]->categoria[j] + key;
-                while (soma > 126)
+                if(vetlivros [i]->categoria[j] != 32)
                 {
-                    soma -= 93;
+                    soma = vetlivros[i]->categoria[j] + key;
+                    while (soma > 126)
+                    {
+                        soma -= 93;
+                    }
+                    vetlivros[i]->categoria[j] = soma;
                 }
-                vetlivros[i]->categoria[j] = soma;
                 j += 1;
             }
             fprintf(data, "%d %d %d %d\n%s\n%s\n", (i + key), (vetlivros[i]->ano + key), (vetlivros[i]->status + key), (vetlivros[i]->aluno + key), vetlivros[i]->nome, vetlivros[i]->categoria);
@@ -118,9 +132,44 @@ void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livr
     }
     else{
         FILE *data;
+        int key = 0, soma = 0, verificador;
         data = fopen("data.txt", "r");
+        printf("Digite a senha: ");
+        scanf(" %[^\n]", senha);
+        int tam_senha = strlen(senha);
+        for (size_t i = 0; i < tam_senha; i++)
+        {
+            key += senha[i];
+        }
+        fscanf(data, "%d", &verificador);
+        //printf("%d\n", verificador);
+        //printf("%d\n", verificador - key);
+        //Enquanto a senha for incorreta, o usuário será perguntado para digitar a senha novamente
+        while (correto == 1)
+        {
+            if ((verificador - key) != 321)
+            {
+                printf("Senha incorreta. Digite a senha novamente: ");
+                scanf(" %[^\n]", senha);
+                tam_senha = strlen(senha);
+                key = 0;
+                for (size_t i = 0; i < tam_senha; i++)
+                {
+                    key += senha[i];
+                }
+            }
+            else
+            {
+                correto = 0;
+            }
+        }
         fscanf(data, "%d", &(*matriculados));
         fscanf(data, "%d", &(*turmas));
+        //printf("Testezinho\n");
+        *turmas -= key;
+        // printf("%d\n", *turmas);
+        *matriculados -= key;
+        // printf("%d\n", *matriculados);
         if ((*matriculados + 1) > ((*turmas) * 35))
         {
             *turmas += 1;
@@ -130,20 +179,89 @@ void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livr
                 (*tab_alunos)[i] = (alunos *)malloc(sizeof(alunos));
             }
         }
+        correto = 1;
+        int aux;
+        char txt_aux[50];
         for (int i = 0; i < *matriculados; i++)
         {
+            //printf("Testezinho\n");
             //Talvez usar um alternador status 
             if (correto == 1)
             {
                 fscanf(data, "%d", &id);
+                id -= key;
             } 
             if (id == i)
             {
-                fscanf(data, "%d", &(*tab_alunos)[i]->pendencias);
-                fscanf(data, "%d", &(*tab_alunos)[i]->livro);
-                fscanf(data, "%d", &(*tab_alunos)[i]->recurso);
-                fscanf(data, " %[^\n]", (*tab_alunos)[i]->nome);
-                fscanf(data, " %[^\n]", (*tab_alunos)[i]->matricula);
+                //fscanf(data, "%d", &(*tab_alunos)[i]->pendencias);
+                fscanf(data, "%d", &aux);
+                (*tab_alunos)[i]->pendencias = aux - key;
+                //fscanf(data, "%d", &(*tab_alunos)[i]->livro);
+                fscanf(data, "%d", &aux);
+                (*tab_alunos)[i]->livro = aux - key;
+                // fscanf(data, "%d", &(*tab_alunos)[i]->recurso);
+                fscanf(data, "%d", &aux);
+                (*tab_alunos)[i]->recurso = aux - key;
+                //fscanf(data, " %[^\n]", (*tab_alunos)[i]->nome);
+                fscanf(data, " %[^\n]", txt_aux);
+                int j = 0, tam_aux = strlen(txt_aux);
+                soma = 0;
+                while (txt_aux[j] != '\0')
+                {
+                    // Verificar se caractere é espaço, se for, não fazer nada.
+                    if(txt_aux[j] != 32)
+                    {
+                        // printf("%d\n", tam_aux);
+                        soma = txt_aux[j];
+                        // Descriptografar o caractere
+                        for(;;)
+                        {
+                            //printf("Testezinho\n");
+                            soma += 93;
+                            if (soma > key && (soma - key) > 33)
+                            {
+                                //printf("Entrei\n");
+                                soma -= key;
+                                txt_aux[j] = soma;
+                                break;
+                            }
+                        }
+                    }
+                    j += 1;
+                    soma = 0;
+                }
+                soma = 0;
+                strcpy((*tab_alunos)[i]->nome, txt_aux);
+                // fscanf(data, " %[^\n]", (*tab_alunos)[i]->matricula);
+                fscanf(data, " %[^\n]", txt_aux);
+                j = 0;
+                while (txt_aux[j] != '\0')
+                {
+                    //printf("Testezinho\n");
+                    // Verificar se caractere é espaço, se for, não fazer nada.
+                    if(txt_aux[j] != 32)
+                    {
+                        // Descriptografar o caractere
+                        // printf("%d\n", tam_aux);
+                        soma = txt_aux[j];
+                        for(;;)
+                        {
+                            //printf("Testezinho\n");
+                            soma += 93;
+                            //printf("%d\n", soma);
+                            if (soma > key && (soma - key) > 33)
+                            {
+                                //printf("Entrei\n");
+                                soma -= key;
+                                txt_aux[j] = soma;
+                                break;
+                            }
+                        }
+                    }
+                    j += 1;
+                    soma = 0;
+                }
+                strcpy((*tab_alunos)[i]->matricula, txt_aux);
                 correto = 1;
             }
             else{
@@ -153,7 +271,9 @@ void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livr
             }
         }
         fscanf(data, "%d", &(*sistema_livros));
+        *sistema_livros -= key;
         fscanf(data, "%d", &(*caixas));
+        *caixas -= key;
         if ((*sistema_livros + 1) > ((*caixas) *50))
         {
             //printf("ENTREI NOO REALLOC LIVRO\n");
@@ -170,19 +290,77 @@ void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livr
         correto = 1;
         for (int i = 0; i < *sistema_livros; i++)
         {
+            //printf("Testezinho\n");
             if (correto == 1)
             {
                 fscanf(data, "%d", &id);
+                id -= key;
                 // printf("%d\n", id);
                 // scanf("%d", &lixo);
             }
             if (id == i)
             {
-                fscanf(data, "%d", &(*tab_livros)[i]->ano);
-                fscanf(data, "%d", &(*tab_livros)[i]->status);
-                fscanf(data, "%d", &(*tab_livros)[i]->aluno);
-                fscanf(data, " %[^\n]", (*tab_livros)[i]->nome);
-                fscanf(data, " %[^\n]", (*tab_livros)[i]->categoria);
+                // fscanf(data, "%d", &(*tab_livros)[i]->ano);
+                fscanf(data, "%d", &aux);
+                (*tab_livros)[i]->ano = aux - key;
+                // fscanf(data, "%d", &(*tab_livros)[i]->status);
+                fscanf(data, "%d", &aux);
+                (*tab_livros)[i]->status = aux - key;
+                // fscanf(data, "%d", &(*tab_livros)[i]->aluno);
+                fscanf(data, "%d", &aux);
+                (*tab_livros)[i]->aluno = aux - key;
+                // fscanf(data, " %[^\n]", (*tab_livros)[i]->nome);
+                fscanf(data, " %[^\n]", txt_aux);
+                int j = 0;
+                soma = 0;
+                while (txt_aux[j] != '\0')
+                {
+                    // Verificar se caractere é espaço, se for, não fazer nada.
+                    if(txt_aux[j] != 32)
+                    {
+                        // Descriptografar o caractere
+                        soma = txt_aux[j];
+                        for(;;)
+                        {
+                            soma += 93;
+                            if (soma > key && (soma - key) > 33)
+                            {
+                                soma -= key;
+                                txt_aux[j] = soma;
+                                break;
+                            }
+                        }
+                    }
+                    j += 1;
+                    soma = 0;
+                }
+                strcpy((*tab_livros)[i]->nome, txt_aux);
+                // fscanf(data, " %[^\n]", (*tab_livros)[i]->categoria);
+                fscanf(data, " %[^\n]", txt_aux);
+                j = 0;
+                soma = 0;
+                while (txt_aux[j] != '\0')
+                {
+                    // Verificar se caractere é espaço, se for, não fazer nada.
+                    if(txt_aux[j] != 32)
+                    {
+                        soma = txt_aux[j];
+                        // Descriptografar o caractere
+                        for(;;)
+                        {
+                            soma += 93;
+                            if (soma > key && (soma - key) > 33)
+                            {
+                                soma -= key;
+                                txt_aux[j] = soma;
+                                break;
+                            }
+                        }
+                    }
+                    j += 1;
+                    soma = 0;
+                }
+                strcpy((*tab_livros)[i]->categoria, txt_aux);
             }
             else{
                 correto = 0;
@@ -197,17 +375,48 @@ void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livr
             // printf("ENtrou no while\n");
             //int lixo;
             p = (recurso *)malloc(sizeof(recurso));
-            p->ID = id;
+            p->ID = (id - key);
             // printf("%d\n", id);
-            fscanf(data, "%d", &(p->status));
+            // fscanf(data, "%d", &(p->status));
+            fscanf(data, "%d", &aux);
+            p->status = aux - key;
             // printf("%d\n", p->status);
-            fscanf(data, "%d", &(p->aluno));
+            // fscanf(data, "%d", &(p->aluno));
+            fscanf(data, "%d", &aux);
+            p->aluno = aux - key;
             // printf("%d\n", p->aluno);
-            fscanf(data, " %[^\n]", p->tipo);
+            // fscanf(data, " %[^\n]", p->tipo);
+            fscanf(data, " %[^\n]", txt_aux);
+            int j = 0;
+            soma = 0;
+            while (txt_aux[j] != '\0')
+            {
+                // Verificar se caractere é espaço, se for, não fazer nada.
+                if(txt_aux[j] != 32)
+                {
+                    soma = txt_aux[j];
+                    // Descriptografar o caractere
+                    for(;;)
+                    {
+                        soma += 93;
+                        if (soma > key && (soma - key) > 33)
+                        {
+                            soma -= key;
+                            txt_aux[j] = soma;
+                            break;
+                        }
+                    }
+                }
+                j += 1;
+                soma = 0;
+            }
+            strcpy(p->tipo, txt_aux);
             // printf("%s\n", p->tipo);
             //scanf("%d", &lixo);
             p->prox = cab->prox;
             cab->prox = p;
         }
+    fclose(data);
+    //scanf("%d", &lixo);
     }
 }
