@@ -8,8 +8,8 @@
 void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matriculados, int sistema_livros, int turmas, int caixas, char *senha){
     FILE *data;
     int tam_senha = strlen(senha);
-    int key = 0, soma = 0;
-    int lixo;
+    int key = 0, soma = 0, j = 0;
+    //int lixo;
     for (size_t i = 0; i < tam_senha; i++)
     {
         key += senha[i];
@@ -26,7 +26,7 @@ void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matri
     {
         if (vetalunos[i] != NULL)
         {
-            int j = 0;
+            j = 0;
             while(vetalunos[i]->nome[j] != '\0') //Só deixei um usando WHILE e outro usando FOR pq um bug no meu pc fez com que eu pensasse que o FOR não estva funcionando
             {
                 //printf("ENTREI NO WHILE\n");
@@ -54,12 +54,34 @@ void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matri
         //scanf("%d", &lixo);
     }
     fprintf(data, "\n");
-    fprintf(data, "%d %d ", sistema_livros, caixas);
+    fprintf(data, "%d %d ", (sistema_livros + key), (caixas + key));
     for (int i = 0; i < sistema_livros; i++)
     {
         if (vetlivros[i] != NULL)
         {
-            fprintf(data, "%d %d %d %d\n%s\n%s\n", i, vetlivros[i]->ano, vetlivros[i]->status, vetlivros[i]->aluno, vetlivros[i]->nome, vetlivros[i]->categoria);
+            j = 0;
+            while (vetlivros[i]->nome[j] != '\0')
+            {
+                soma = vetlivros[i]->nome[j] + key;
+                while (soma > 126)
+                {
+                    soma -= 93;
+                }
+                vetlivros[i]->nome[j] = soma;
+                j += 1;
+            }
+            j = 0;
+            while(vetlivros[i]->categoria[j] != '\0')
+            {
+                soma = vetlivros[i]->categoria[j] + key;
+                while (soma > 126)
+                {
+                    soma -= 93;
+                }
+                vetlivros[i]->categoria[j] = soma;
+                j += 1;
+            }
+            fprintf(data, "%d %d %d %d\n%s\n%s\n", (i + key), (vetlivros[i]->ano + key), (vetlivros[i]->status + key), (vetlivros[i]->aluno + key), vetlivros[i]->nome, vetlivros[i]->categoria);
         }    
     }
     fprintf(data, "\n");
@@ -68,7 +90,18 @@ void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matri
         recurso *p = cab->prox;
         while (p != NULL)
         {
-            fprintf(data, "%d %d %d\n%s\n", p->ID, p->status, p->aluno, p->tipo);
+            j = 0;
+            while(p->tipo[j] != '\0')
+            {
+                soma = p->tipo[j] + key;
+                while (soma > 126)
+                {
+                    soma -= 93;
+                }
+                p->tipo[j] = soma;
+                j += 1;
+            }
+            fprintf(data, "%d %d %d\n%s\n", (p->ID + key), (p->status + key), (p->aluno + key), p->tipo);
             p = p->prox;
         }
     }
