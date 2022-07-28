@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
     //rm_aluno(struct aluno *p)
     //p->nome = "novonome";
     ///p = NULL -> mesma coisa que p = malloc(0*sizeof(alunos));
-
+    char senha[20];
     int matriculados = 0;
     alunos **vetalunos = (alunos **)malloc(sizeof(alunos *));
     vetalunos = realloc(vetalunos, 35 * sizeof(alunos *));
@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
 
     //vetalunos[3]->teste = 56;
     int turmas = 1, escolha = 1, caixas = 1, sistema_livros = 0;
-    import(&vetalunos, &vetlivros, vetalunos, vetlivros, cab, &matriculados, &sistema_livros, &turmas, &caixas);
+    import(&vetalunos, &vetlivros, vetalunos, vetlivros, cab, &matriculados, &sistema_livros, &turmas, &caixas, senha);
     //printf("%s", vetalunos[0]->nome);
     while (escolha != 0) //Menu Principal
     {
@@ -135,7 +135,6 @@ int main(int argc, char const *argv[])
         }
     }
     //printf("%s\n", vetalunos[0]->nome);
-    export_data(vetalunos, vetlivros, cab, matriculados, sistema_livros, turmas, caixas);
-
+    export_data(vetalunos, vetlivros, cab, matriculados, sistema_livros, turmas, caixas, senha);
     return 0;
 }

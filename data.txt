@@ -1,10 +1,5 @@
-2 1 1 0 -1 -1
-fdse
-321
+295 295 294 294 293 293
+p
+@AB
 
-2 1 1 1234 1 0
-Peter Pan
-aventura
-
-543 1 -1
-Computador
+0 1 

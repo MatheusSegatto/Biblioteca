@@ -5,17 +5,53 @@
 #include <unistd.h>
 #include <ctype.h>
 
-void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matriculados, int sistema_livros, int turmas, int caixas){
+void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matriculados, int sistema_livros, int turmas, int caixas, char *senha){
     FILE *data;
-    
+    int tam_senha = strlen(senha);
+    int key = 0, soma = 0;
+    int lixo;
+    for (size_t i = 0; i < tam_senha; i++)
+    {
+        key += senha[i];
+    }
+    //printf("%s\n%d\n", senha, key);
+    //scanf("%d", &lixo);
     data = fopen("data.txt", "w");
-    fprintf(data, "%d %d ", matriculados, turmas);
+
+    fprintf(data, "%d %d ", (matriculados + key), (turmas + key));
+
+    // Tratando vetores de char
+
     for (int i = 0; i < matriculados; i++)
     {
         if (vetalunos[i] != NULL)
         {
-            fprintf(data, "%d %d %d %d\n%s\n%s\n", i, vetalunos[i]->pendencias, vetalunos[i]->livro, vetalunos[i]->recurso, vetalunos[i]->nome, vetalunos[i]->matricula);
+            int j = 0;
+            while(vetalunos[i]->nome[j] != '\0') //Só deixei um usando WHILE e outro usando FOR pq um bug no meu pc fez com que eu pensasse que o FOR não estva funcionando
+            {
+                //printf("ENTREI NO WHILE\n");
+                soma = vetalunos[i]->nome[j] + key;
+                while (soma > 126)
+                {
+                    soma -= 93;
+                }
+                vetalunos[i]->nome[j] = soma; //Talvez não funcione dessa forma
+                j += 1;
+            }
+            for (int j = 0; j < strlen(vetalunos[i]->matricula); j++)
+            {
+                //printf("ENTREI NO FOR\n");
+                soma = vetalunos[i]->matricula[j] + key;
+                while (soma > 126)
+                {
+                    soma -= 93;
+                }
+                vetalunos[i]->matricula[j] = soma;
+            }
+            //printf("%d\n", soma);
+            fprintf(data, "%d %d %d %d\n%s\n%s\n", (i + key), (vetalunos[i]->pendencias + key), (vetalunos[i]->livro + key), (vetalunos[i]->recurso + key), (vetalunos[i]->nome), (vetalunos[i]->matricula));
         }
+        //scanf("%d", &lixo);
     }
     fprintf(data, "\n");
     fprintf(data, "%d %d ", sistema_livros, caixas);
@@ -39,10 +75,12 @@ void export_data(alunos **vetalunos, livros **vetlivros, recurso *cab, int matri
     fclose(data);
 }
 
-void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livros **vetlivros, recurso *cab, int *matriculados, int *sistema_livros, int *turmas, int *caixas){
+void import(alunos ***tab_alunos, livros ***tab_livros, alunos **vetalunos, livros **vetlivros, recurso *cab, int *matriculados, int *sistema_livros, int *turmas, int *caixas, char *senha){
     int id, correto = 1;
     if (access("data.txt", F_OK) != 0)
     {
+        printf("Olá, aparentemente é sua primeira vez acessando o sistema. Por favor, defina uma senha (Máx. 20 caracteres)\n");
+        scanf(" %[^\n]", senha);
         return;
     }
     else{
