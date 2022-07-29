@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
                 }
                 else if (escolha == 4)
                 {
-                    busca_livro(vetlivros, sistema_livros);
+                    busca_livro(vetlivros, sistema_livros, vetalunos);
                 }
                 else if (escolha == 5)
                 {

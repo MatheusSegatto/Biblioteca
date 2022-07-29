@@ -99,9 +99,10 @@ void lista_recurso(recurso *cab, alunos **pessoas){
     {
         printf("Nenhum recurso cadastrado!\n");
         printf("====================================\n");
-        char saida;
-        printf("Pressione qualquer tecla para sair\n");
-        scanf("%s", &saida);
+        printf("Pressione ENTER para sair\n");
+        __fpurge(stdin);
+        getchar();
+        __fpurge(stdin);
         return;
     }
     

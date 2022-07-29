@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
 void cadastro_livro(livros ***tabela, int *cadastrados, int *caixas){
     system("clear");
@@ -33,10 +34,20 @@ void cadastro_livro(livros ***tabela, int *cadastrados, int *caixas){
 
     printf("Qual o ano de publicação?\n");
     scanf("%d", &ano);
-
+    time_t rawtime;
+    time(&rawtime);
+    struct tm *info = localtime(&rawtime);
+    int atualmete = info->tm_year + 1900;
+    // Verificar se o ano é menor que o atual, enquanto não for, pedir que digite novamente
+    while (ano > atualmete)
+    {
+        printf("Ano de publicação inválido! Digite novamente\n");
+        scanf("%d", &ano);
+    }
     (*tabela)[*cadastrados]->ano = ano;
 
     (*tabela)[*cadastrados]->status = 1;
+    (*tabela)[*cadastrados]->aluno = -1;
 
     *cadastrados += 1;
 
@@ -100,7 +111,7 @@ void lista_livro(livros **vet, int cadastrados, alunos **pessoas){
     
 }
 
-void busca_livro(livros **vet, int cadastrados){
+void busca_livro(livros **vet, int cadastrados, alunos **pessoas){
     system("clear");
     int escolha, id;
     char tmp[20];
@@ -120,7 +131,7 @@ void busca_livro(livros **vet, int cadastrados){
             printf("Livro encontrado!\nID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", id, vet[id]->nome, vet[id]->categoria, vet[id]->ano);
             if (vet[id]->status == 0)
             {
-                printf("STATUS: Emprestado para o aluno de ID: %d\n", vet[id]->aluno);
+                printf("STATUS: Emprestado para o aluno de matrícula: %s\n", pessoas[vet[id]->aluno]->matricula);
             }
             else{
                 printf("STATUS: Disponível\n");
