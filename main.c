@@ -136,5 +136,7 @@ int main(int argc, char const *argv[])
     }
     //printf("%s\n", vetalunos[0]->nome);
     export_data(vetalunos, vetlivros, cab, matriculados, sistema_livros, turmas, caixas, senha);
+    free(vetalunos);
+    free(vetlivros);
     return 0;
 }

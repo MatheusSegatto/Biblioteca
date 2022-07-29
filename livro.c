@@ -1,5 +1,6 @@
 #include "dados.h"
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -41,9 +42,10 @@ void cadastro_livro(livros ***tabela, int *cadastrados, int *caixas){
 
     printf("====================================\n");
     printf("Livro cadastrado com sucesso!\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }
 
 void remove_livro(livros **vet, int cadastrados){
@@ -66,9 +68,10 @@ void remove_livro(livros **vet, int cadastrados){
         printf("Livro não está no sistema, verifique o ID! Operação cancelada\n");
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }
 
 void lista_livro(livros **vet, int cadastrados, alunos **pessoas){
@@ -90,9 +93,10 @@ void lista_livro(livros **vet, int cadastrados, alunos **pessoas){
         }
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
     
 }
 
@@ -150,9 +154,10 @@ void busca_livro(livros **vet, int cadastrados){
         }
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }
 
 void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalalunos){
@@ -205,7 +210,8 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
         }
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }

@@ -1,5 +1,6 @@
 #include "dados.h"
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -25,9 +26,10 @@ void cadastro_recurso(recurso *cab){
     {
         printf("Recurso já cadastrado! Operação cancelada.\n");
         printf("====================================\n");
-        char saida;
-        printf("Pressione qualquer tecla para sair\n");
-        scanf("%s", &saida);
+        printf("Pressione ENTER para sair\n");
+        __fpurge(stdin);
+        getchar();
+        __fpurge(stdin);
         return;
     }
     //Inserção do recurso
@@ -54,9 +56,10 @@ void cadastro_recurso(recurso *cab){
     p->prox = cab->prox;
     cab->prox = p;
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }
 
 void remove_recurso(recurso *cab){
@@ -84,9 +87,10 @@ void remove_recurso(recurso *cab){
         printf("Recurso não encontrado! Verifique o ID.\n");
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }
 
 void lista_recurso(recurso *cab, alunos **pessoas){
@@ -117,9 +121,10 @@ void lista_recurso(recurso *cab, alunos **pessoas){
         p = p->prox;
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }
 
 void busca_recurso_menu(recurso *cab, alunos **pessoas){
@@ -148,9 +153,10 @@ void busca_recurso_menu(recurso *cab, alunos **pessoas){
         printf("Recurso não encontrado! Verifique o ID.\n");
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }
 
 void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
@@ -214,8 +220,8 @@ void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
     }
     
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
-    
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }

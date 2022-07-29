@@ -1,5 +1,6 @@
 #include "dados.h"
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -41,9 +42,12 @@ void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int 
         
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    //char saida;
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
+    //scanf("%s", &saida);
 }
 
 void remove_aluno(alunos **vet, int matriculados){
@@ -67,9 +71,12 @@ void remove_aluno(alunos **vet, int matriculados){
         printf("Aluno não está no sistema!\n");
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    //char saida;
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
+    //scanf("%s", &saida);
 }
 
 void lista_aluno(alunos **vet, int quantidade){
@@ -83,9 +90,13 @@ void lista_aluno(alunos **vet, int quantidade){
         }
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    //char saida;
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
+    //scanf("%s", &saida);
+    //__fpurge(stdin);
     //system("pause");
     
 }
@@ -105,7 +116,8 @@ void busca_aluno(alunos **vet, int cadastrados){
         printf("Aluno não existe no sistema\n");
     }
     printf("====================================\n");
-    char saida;
-    printf("Pressione qualquer tecla para sair\n");
-    scanf("%s", &saida);
+    printf("Pressione ENTER para sair\n");
+    __fpurge(stdin);
+    getchar();
+    __fpurge(stdin);
 }
