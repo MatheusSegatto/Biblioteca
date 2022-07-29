@@ -98,7 +98,7 @@ void busca_aluno(alunos **vet, int cadastrados){
     if (id < (cadastrados) && vet[id] != NULL)
     {
         printf("====================================\n");
-        printf("Aluno encontrado!\nNOME: %s\nMATRICULA: %s\nSTATUS: %d livros emprestados\n", vet[id]->nome, vet[id]->matricula, vet[id]->pendencias);
+        printf("Aluno encontrado!\nNOME: %s\nMATRICULA: %s\nSTATUS: %d pendências com a biblioteca\n", vet[id]->nome, vet[id]->matricula, vet[id]->pendencias);
     }
     else
     {

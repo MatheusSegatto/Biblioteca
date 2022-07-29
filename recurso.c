@@ -46,7 +46,7 @@ void cadastro_recurso(recurso *cab){
     }
     else if (escolha == 3)
     {
-        strcpy(p->tipo, "Armário");
+        strcpy(p->tipo, "Armario");
     }
     p->aluno = -1;
     p->status = 1;
@@ -77,7 +77,7 @@ void remove_recurso(recurso *cab){
             printf("Recurso removido com sucesso!\n");
         }
         else{
-            printf("Recurso ocupado! Operação cancelada\n");
+            printf("Recurso ocupado pelo aluno de ID: %d! Operação cancelada\n", p->aluno);
         }
     }
     else{
@@ -166,7 +166,7 @@ void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
         printf("Qual ID do recurso que será ocupado?\n");
         scanf("%d", &id);
         p = busca_recurso(cab, id, &ant);
-        if (p != NULL)
+        if (p != NULL && p->status == 1)
         {
             printf("Qual ID do aluno que ocupará o recurso?\n");
             scanf("%d", &aluno);
@@ -186,9 +186,13 @@ void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
             }
 
         }
+        else if (p->status == 0)
+        {
+            printf("Recurso já ocupado pelo aluno de ID: %d\n", p->aluno);
+        }
         else{
             printf("Recurso não encontrado! Verifique o ID.\n");
-    }
+        }
     }
     else if (escolha ==2)
     {

@@ -111,6 +111,7 @@ void busca_livro(livros **vet, int cadastrados){
             printf("Livro não está no sistema!\n");
         }
         else{
+            system("clear");
             printf("====================================\n");
             printf("Livro encontrado!\nID: %d\nNOME: %s\nCATEGORIA: %s\nANO: %d\n", id, vet[id]->nome, vet[id]->categoria, vet[id]->ano);
             if (vet[id]->status == 0)
@@ -131,12 +132,13 @@ void busca_livro(livros **vet, int cadastrados){
         {
             tmp[i] = tolower(tmp[i]);
         }
+        system("clear");
         for (int i = 0; i < cadastrados; i++)
         {
             if (strcmp(tmp, vet[i]->categoria) == 0)
             {
                 printf("====================================\n");
-                printf("NOME: %s\nID: %d\n", vet[i]->nome, i);
+                printf("NOME: %s\nANO: %d\nID: %d\n", vet[i]->nome, vet[i]->ano, i);
                 if (vet[i]->status == 0)
                 {
                 printf("STATUS: Emprestado\n");
@@ -162,7 +164,7 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
     {
         printf("Qual ID do livro que será emprestado?\n");
         scanf("%d", &id);
-        if (id < (cadastrados) && vet[id] != NULL)
+        if (id < (cadastrados) && vet[id] != NULL && vet[id]->aluno == -1)
         {
             printf("Qual ID do aluno que ficará com o livro?\n");
             scanf("%d", &aluno);
@@ -177,6 +179,10 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
             else{
                 printf("Aluno não está no sistema\n");
             }
+        }
+        else if (id < (cadastrados) && vet[id] != NULL && vet[id]->aluno != -1)
+        {
+            printf("Livro já está emprestado para o aluno de ID: %d\n", vet[id]->aluno);
         }
         else{
             printf("Livro não está no sistema, verifique ID!\n");
