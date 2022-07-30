@@ -156,7 +156,7 @@ void busca_livro(livros **vet, int cadastrados, alunos **pessoas){
                 printf("NOME: %s\nANO: %d\nID: %d\n", vet[i]->nome, vet[i]->ano, i);
                 if (vet[i]->status == 0)
                 {
-                printf("STATUS: Emprestado\n");
+                printf("STATUS: Emprestado para o aluno de matrícula: %s\n", pessoas[vet[i]->aluno]->matricula);
                 }
                 else{
                 printf("STATUS: Disponível\n");
@@ -215,6 +215,10 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
             pessoas[vet[id]->aluno]->pendencias -= 1;
             vet[id]->aluno = -1;
             printf("Livro devolvido à biblioteca com sucesso!\n");
+        }
+        else if (vet[id]->aluno == -1)
+        {
+            printf("Livro já está devolvido!\n");
         }
         else{
             printf("Livro não está no sistema, verifique ID!\n");
