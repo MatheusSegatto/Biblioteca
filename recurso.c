@@ -193,7 +193,7 @@ void ocupa_recurso(recurso *cab, alunos **pessoas, int totalalunos){
             }
 
         }
-        else if (p->status == 0)
+        else if (p != NULL && p->status == 0)
         {
             printf("Recurso já ocupado pelo aluno de ID: %d\n", p->aluno);
         }

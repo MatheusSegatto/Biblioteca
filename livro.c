@@ -121,7 +121,7 @@ void busca_livro(livros **vet, int cadastrados, alunos **pessoas){
     {
         printf("Qual o ID procurado?\n");
         scanf("%d", &id);
-        if (id > (cadastrados - 1))
+        if (id > (cadastrados - 1) || vet[id] == NULL)
         {
             printf("Livro não está no sistema!\n");
         }
@@ -216,7 +216,7 @@ void empresta_livro(livros **vet, alunos **pessoas, int cadastrados, int totalal
             vet[id]->aluno = -1;
             printf("Livro devolvido à biblioteca com sucesso!\n");
         }
-        else if (vet[id]->aluno == -1)
+        else if (id < (cadastrados) && vet[id] != NULL && vet[id]->aluno == -1)
         {
             printf("Livro já está devolvido!\n");
         }
