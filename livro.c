@@ -8,14 +8,13 @@
 
 void cadastro_livro(livros ***tabela, int *cadastrados, int *caixas){
     system("clear");
-    //Para alterar, usar *caixas
     if ((*cadastrados + 1) > (*caixas * 50))
     {
         *caixas += 1;
         *tabela = realloc(*tabela, (50 * (*caixas)) * sizeof(livros *));
         for (size_t i = (50 * ((*caixas) - 1)); i < (50 * (*caixas)); i++)
         {
-            (*tabela)[i] = (livros *)malloc(sizeof(livros)); //É *tabela msm? Quando coloquei só "tabela" recebi um warning do gcc
+            (*tabela)[i] = (livros *)malloc(sizeof(livros));
         }
     }
     char tmp[20];
