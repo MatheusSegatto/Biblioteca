@@ -16,7 +16,7 @@ int main(int argc, char const *argv[])
     //chamada -> rm_aluno(v[i])
     //rm_aluno(struct aluno *p)
     //p->nome = "novonome";
-    ///p = NULL -> mesma coisa que p = malloc(0*sizeof(alunos));
+    //p = NULL -> mesma coisa que p = malloc(0*sizeof(alunos));
     char senha[20];
     int matriculados = 0;
     alunos **vetalunos = (alunos **)malloc(sizeof(alunos *));
