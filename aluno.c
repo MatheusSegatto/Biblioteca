@@ -42,12 +42,10 @@ void novo_cadastro_aluno(alunos ***tabela, alunos **vet, int *matriculados, int 
         
     }
     printf("====================================\n");
-    //char saida;
     printf("Pressione ENTER para sair\n");
     __fpurge(stdin);
     getchar();
     __fpurge(stdin);
-    //scanf("%s", &saida);
 }
 
 void remove_aluno(alunos **vet, int matriculados){
@@ -55,7 +53,7 @@ void remove_aluno(alunos **vet, int matriculados){
     int id = 0;
     printf("Digite o ID do aluno que quer remover\n");
     scanf("%d", &id);
-    //TODO Verificar se possui algo emprestado
+    // Verificar se possui algo emprestado
     if(id < matriculados && vet[id] != NULL){
         if (vet[id]->livro == -1 && vet[id]->recurso == -1 && vet[id]->pendencias == 0)
         {
@@ -71,12 +69,10 @@ void remove_aluno(alunos **vet, int matriculados){
         printf("Aluno não está no sistema!\n");
     }
     printf("====================================\n");
-    //char saida;
     printf("Pressione ENTER para sair\n");
     __fpurge(stdin);
     getchar();
     __fpurge(stdin);
-    //scanf("%s", &saida);
 }
 
 void lista_aluno(alunos **vet, int quantidade){
@@ -90,14 +86,10 @@ void lista_aluno(alunos **vet, int quantidade){
         }
     }
     printf("====================================\n");
-    //char saida;
     printf("Pressione ENTER para sair\n");
     __fpurge(stdin);
     getchar();
     __fpurge(stdin);
-    //scanf("%s", &saida);
-    //__fpurge(stdin);
-    //system("pause");
     
 }
 
