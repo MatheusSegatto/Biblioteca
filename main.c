@@ -10,13 +10,6 @@
 
 int main(int argc, char const *argv[])
 {
-    //Alocando vetor de alunos
-    //vetalunos[0] = (alunos *)malloc(sizeof(alunos));
-    //vetalunos[i]->nome;
-    //chamada -> rm_aluno(v[i])
-    //rm_aluno(struct aluno *p)
-    //p->nome = "novonome";
-    //p = NULL -> mesma coisa que p = malloc(0*sizeof(alunos));
     char senha[20];
     int matriculados = 0;
     alunos **vetalunos = (alunos **)malloc(sizeof(alunos *));
@@ -28,7 +21,6 @@ int main(int argc, char const *argv[])
 
     //Alocando vetor de livros
     livros **vetlivros = (livros **)(malloc(sizeof(livros *)));
-    //vetlivros[0] = (livros *)malloc(sizeof(livros));
     vetlivros = realloc(vetlivros, 50 * sizeof(livros *));
     for (size_t i = 0; i < 50; i++)
     {
@@ -38,11 +30,9 @@ int main(int argc, char const *argv[])
     recurso *cab = (recurso *)malloc(sizeof(recurso));
     cab->prox = NULL;
 
-
-    //vetalunos[3]->teste = 56;
     int turmas = 1, escolha = 1, caixas = 1, sistema_livros = 0;
     import(&vetalunos, &vetlivros, vetalunos, vetlivros, cab, &matriculados, &sistema_livros, &turmas, &caixas, senha);
-    //printf("%s", vetalunos[0]->nome);
+
     while (escolha != 0) //Menu Principal
     {
         system("clear");
@@ -134,7 +124,7 @@ int main(int argc, char const *argv[])
             escolha = 1;
         }
     }
-    //printf("%s\n", vetalunos[0]->nome);
+
     export_data(vetalunos, vetlivros, cab, matriculados, sistema_livros, turmas, caixas, senha);
     free(vetalunos);
     free(vetlivros);
